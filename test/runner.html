@@ -1,0 +1,64 @@
+<html>  
+  <head>  
+    <meta charset="utf-8">
+    <title>ballpark Mocha Tests</title>
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+  </head>  
+  <body>  
+    <h1>ballpark Tests</h1>
+    <div id="candyContainer"></div>
+    <div id="mocha"></div>
+
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/chai/chai.js"></script>
+    <script src="../src/candy.js"></script>
+    <script>
+        var assert = chai.assert,
+            candyContainer = document.getElementById('candyContainer');
+
+        mocha.setup('tdd');
+
+        test('instantiate Candy.Wrapper', function(){
+          var candy = new Candy.Wrapper({
+            width: 500,
+            height: 200,
+            container: candyContainer
+          });
+
+          assert.equal(candy.width, 500);
+          assert.equal(candy.height, 200);
+          assert.ok(candy.container);
+        });
+
+        test('instantiate Candy.Layer', function(){
+          var layer = new Candy.Layer();
+
+          assert.ok(layer.sceneCanvas);
+          assert.ok(layer.sceneContext);
+          assert.ok(layer.hitCanvas);
+          assert.ok(layer.hitContext);
+        });
+
+        test('add layer and draw onto it', function(){
+          var candy = new Candy.Wrapper({
+            width: 500,
+            height: 200,
+            container: candyContainer
+          });
+
+          var layer = new Candy.Layer();
+
+          assert.equal(candy.layers.length, 0);
+          candy.add(layer);
+          assert.equal(candy.layers.length, 1);
+
+          layer.sceneContext.beginPath();
+          layer.sceneContext.fillStyle = 'red';
+          layer.sceneContext.fillRect(0, 0, 50, 50);
+
+        });
+
+        mocha.run();
+    </script>
+  </body>  
+</html> 

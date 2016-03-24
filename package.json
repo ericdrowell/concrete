@@ -1,0 +1,24 @@
+{
+  "name": "candy",
+  "version": "0.1.0",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "gulp": "^3.9.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-jshint": "^2.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-uglify": "^1.5.1",
+    "jshint": "^2.8.0",
+    "mocha": "^2.3.4",
+    "run-sequence": "^1.1.5"
+  },
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ericdrowell/candy.git"
+  },
+  "author": "Eric Rowell",
+  "license": "MIT"
+}
