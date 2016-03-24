@@ -1,6 +1,19 @@
 (function() {
   var Candy = {};
 
+  Candy.pixelRatio = (function() {
+    // client browsers
+    if (window && window.navigator && window.navigator.userAgent && !/PhantomJS/.test(window.navigator.userAgent)) {
+      return 2;
+    }
+    // headless browsers
+    else {
+      return 1;
+    }
+  })();
+
+  ////////////////////////////////////////////////////////////// WRAPPER //////////////////////////////////////////////////////////////
+  
   Candy.Wrapper = function(config) {
     if (!config) {
       config = {};
@@ -8,14 +21,13 @@
     this.width = config.width;
     this.height = config.height;
     this.layers = []; 
-    this.layerMap = {};
 
     this.container = document.createElement('div');
     this.container.className = 'candy-container';
     this.container.style.display = 'inline-block';
     this.setSize(this.width, this.height);
 
-    // first clear config container
+    // clear container
     config.container.innerHTML = '';
     config.container.appendChild(this.container);
   };
@@ -24,39 +36,40 @@
     add: function(layer) {
       this.layers.push(layer);
 
-      if (layer.id !== undefined) {
-        this.layerMap[layer.id] = layer;
-      }
+      layer.setSize(layer.width || this.width, layer.height || this.height);
 
       this.container.appendChild(layer.container);
     },
-    setWidth: function(width) {
-      this.container.style.width = this.width + 'px';
-    },
-    setHeight: function(height) {
-      this.container.style.height = this.height + 'px';
+    insert: function() {
+
     },
     setSize: function(width, height) {
-      this.setWidth(width);
-      this.setHeight(height);
+      this.width = width;
+      this.height = height;
+      this.container.style.width = this.width + 'px';
+      this.container.style.height = this.height + 'px';
     },
     clear: function() {
       this.clearScene();
       this.clearHit();
     },
     clearScene: function() {
-
+      this.layers.forEach(function(layer) {
+        layer.clearScene();
+      });
     },
     clearHit: function() {
+      this.layers.forEach(function(layer) {
+        layer.clearHit();
+      });
+    },
+    getIntersection: function() {
 
     },
-    getIntersection: function(x, y) {
+    toImage: function() {
 
     },
-    exportPNG: function() {
-
-    },
-    exportCanvas: function() {
+    toCanvas: function() {
 
     },
     download: function() {
@@ -67,70 +80,49 @@
     }
   };
 
+  ////////////////////////////////////////////////////////////// LAYER //////////////////////////////////////////////////////////////
+  
   Candy.Layer = function(config) {
     if (!config) {
       config = {};
     }
-    this.id = config.id;
+    this.width = config.width || 0;
+    this.height = config.height || 0;
 
-    this.hitCanvas = document.createElement('canvas');
-    this.hitCanvas.className = 'candy-layer-hit';
-    this.hitCanvas.style.display = 'none';
-    this.hitCanvas.style.position = 'absolute';
-    this.hitContext = this.hitCanvas.getContext('2d');
-
-    this.sceneCanvas = document.createElement('canvas');
-    this.sceneCanvas.className = 'candy-layer-scene';
-    this.sceneCanvas.style.display = 'inline-block';
-    this.sceneCanvas.style.position = 'absolute';
-    this.sceneContext = this.sceneCanvas.getContext('2d');
+    this.hitCanvas = new Candy.HitCanvas();
+    this.sceneCanvas = new Candy.SceneCanvas();
 
     this.container = document.createElement('div');
     this.container.className = 'candy-layer';
     this.container.style.display = 'inline-block';
     this.container.style.position = 'relative';
-    this.container.appendChild(this.hitCanvas);
-    this.container.appendChild(this.sceneCanvas);
+    this.container.appendChild(this.hitCanvas.canvas);
+    this.container.appendChild(this.sceneCanvas.canvas);
+
+    if (this.width && this.height) {
+      this.setSize(this.width, this.height);
+    }
   };
 
   Candy.Layer.prototype = {
     setX: function(x) {
-
+      this.container.style.left = x + 'px';
     },
-    setY: function(y) {
-
-    },
-    setWidth: function(width) {
-
-    },
-    setHeight: function(height) {
-
+    setY: function() {
+      this.container.style.top = y + 'px';
     },
     setSize: function(width, height) {
-      this.setWidth(width);
-      this.setHeight(height);
-    },
-    setViewport: function(x, y, width, height) {
+      this.width = width;
+      this.container.style.width = width + 'px';
+      this.height = height;
+      this.container.style.height = height + 'px';
 
+      this.sceneCanvas.setSize(width, height);
+      this.hitCanvas.setSize(width, height);
     },
     clear: function() {
-      this.clearScene();
-      this.clearHit();
-    },
-    clearScene: function() {
-
-    },
-    clearHit: function() {
-
-    },
-    getIntersection: function(x, y) {
-
-    },
-    exportPNG: function() {
-
-    },
-    exportCanvas: function() {
-
+      this.sceneCanvas.clear();
+      this.hitCanvas.clear();
     },
     moveUp: function() {
 
@@ -144,7 +136,101 @@
     moveToBottom: function() {
 
     },
+    moveTo: function() {
+
+    },
     destroy: function() {
+
+    }
+  };
+
+  ////////////////////////////////////////////////////////////// SCENE CANVAS //////////////////////////////////////////////////////////////
+  
+  Candy.SceneCanvas = function(config) {
+    if (!config) {
+      config = {};
+    }
+
+    this.width = config.width || 0;
+    this.height = config.height || 0;
+
+    this.canvas = document.createElement('canvas');
+    this.canvas.className = 'candy-scene-canvas';
+    this.canvas.style.display = 'inline-block';
+    this.canvas.style.position = 'absolute';
+    this.context = this.canvas.getContext('2d');
+
+    if (this.width && this.height) {
+      this.setSize(this.width, this.height);
+    }
+  };
+
+  Candy.SceneCanvas.prototype = {
+    setSize: function(width, height) {
+      this.width = width;
+      this.height = height;
+
+      this.canvas.width = width * Candy.pixelRatio;
+      this.canvas.style.width = width + 'px';
+      this.canvas.height = height * Candy.pixelRatio;
+      this.canvas.style.height = height + 'px'; 
+
+      if (Candy.pixelRatio !== 1) {
+        this.context.scale(Candy.pixelRatio, Candy.pixelRatio);
+      }
+    },
+    clear: function() {
+      this.context.clearRect(0, 0, this.width * Candy.pixelRatio, this.height * Candy.pixelRatio);
+    },
+    toImage: function(callback) {
+      var that = this,
+          dataURL = this.canvas.toDataURL(),
+          imageObj = new Image();
+
+      imageObj.onload = function() {
+        imageObj.width = that.width;
+        imageObj.height = that.height;
+        callback(imageObj);
+      };
+      imageObj.src = dataURL;
+    },
+  };
+
+  ////////////////////////////////////////////////////////////// HIT CANVAS //////////////////////////////////////////////////////////////
+  
+  Candy.HitCanvas = function(config) {
+    if (!config) {
+      config = {};
+    }
+
+    this.width = config.width || 0;
+    this.height = config.height || 0;
+
+    this.canvas = document.createElement('canvas');
+    this.canvas.className = 'candy-hit-canvas';
+    this.canvas.style.display = 'none';
+    this.canvas.style.position = 'absolute';
+    this.context = this.canvas.getContext('2d');
+
+    if (this.width && this.height) {
+      this.setSize(this.width, this.height);
+    }
+  };
+
+  Candy.HitCanvas.prototype = {
+    setSize: function(width, height) {
+      this.width = width;
+      this.height = height;
+
+      this.canvas.width = width;
+      this.canvas.style.width = width + 'px';
+      this.canvas.height = height;
+      this.canvas.style.height = height + 'px';
+    },
+    clear: function() {
+      this.context.clearRect(0, 0, this.width, this.height);
+    },
+    getIntersection: function() {
 
     }
   };

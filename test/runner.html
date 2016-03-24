@@ -1,12 +1,27 @@
 <html>  
   <head>  
     <meta charset="utf-8">
-    <title>ballpark Mocha Tests</title>
+    <title>Candy Mocha Tests</title>
     <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+    <style>
+      #candyContainer {
+        display: inline-block;
+        border: 2px solid #ccc;
+        margin-left: 10px;
+      }
+
+      #imageContainer {
+        display: inline-block;
+        border: 2px solid #ccc;
+        margin-top: 10px;
+        margin-left: 10px;
+      }
+    </style>
   </head>  
   <body>  
-    <h1>ballpark Tests</h1>
+    <h1>Candy Tests</h1>
     <div id="candyContainer"></div>
+    <div id="imageContainer"></div>
     <div id="mocha"></div>
 
     <script src="../node_modules/mocha/mocha.js"></script>
@@ -34,12 +49,10 @@
           var layer = new Candy.Layer();
 
           assert.ok(layer.sceneCanvas);
-          assert.ok(layer.sceneContext);
           assert.ok(layer.hitCanvas);
-          assert.ok(layer.hitContext);
         });
 
-        test('add layer and draw onto it', function(){
+        test('add layer', function(){
           var candy = new Candy.Wrapper({
             width: 500,
             height: 200,
@@ -49,13 +62,54 @@
           var layer = new Candy.Layer();
 
           assert.equal(candy.layers.length, 0);
+
           candy.add(layer);
+
           assert.equal(candy.layers.length, 1);
+          assert.equal(layer.width, 500);
+          assert.equal(layer.height, 200);
+        });
 
-          layer.sceneContext.beginPath();
-          layer.sceneContext.fillStyle = 'red';
-          layer.sceneContext.fillRect(0, 0, 50, 50);
+        test('draw, clear, draw onto canvas', function(){
+          var candy = new Candy.Wrapper({
+            width: 500,
+            height: 200,
+            container: candyContainer
+          });
 
+          var layer = new Candy.Layer();
+
+          candy.add(layer);
+
+          layer.sceneCanvas.context.beginPath();
+          layer.sceneCanvas.context.fillStyle = 'red';
+          layer.sceneCanvas.context.fillRect(0, 0, 50, 50);
+
+          layer.sceneCanvas.clear();
+
+          layer.sceneCanvas.context.beginPath();
+          layer.sceneCanvas.context.fillStyle = 'blue';
+          layer.sceneCanvas.context.fillRect(50, 0, 50, 50);
+
+          assert.ok(true);
+        });
+
+        test('canvas toImage', function(done){
+          var canvas = new Candy.SceneCanvas({
+            width: 500,
+            height: 200
+          });
+
+          canvas.context.beginPath();
+          canvas.context.fillStyle = 'red';
+          canvas.context.fillRect(0, 0, 50, 50);
+
+          canvas.toImage(function(image) {
+            imageContainer.appendChild(image);
+            assert.equal(image.width, 500);
+            assert.equal(image.height, 200);
+            done();
+          });
         });
 
         mocha.run();
