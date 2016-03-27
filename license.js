@@ -1,6 +1,6 @@
 /*
  * Candy v@@VERSION
- * A sweet, fat free, HTML5 canvas utility library for all ages.
+ * A sweet, fat free, HTML5 canvas library for all ages.
  * Release Date: @@DATE
  * https://github.com/ericdrowell/candy
  * Licensed under the MIT or GPL Version 2 licenses.

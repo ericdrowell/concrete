@@ -1,5 +1,6 @@
 (function() {
-  var Candy = {};
+  var Candy = {},
+      idCounter = 0;
 
   Candy.pixelRatio = (function() {
     // client browsers
@@ -12,6 +13,8 @@
     }
   })();
 
+  Candy.wrappers = [];
+
   ////////////////////////////////////////////////////////////// WRAPPER //////////////////////////////////////////////////////////////
   
   Candy.Wrapper = function(config) {
@@ -21,23 +24,26 @@
     this.width = config.width;
     this.height = config.height;
     this.layers = []; 
+    this.id = idCounter++;
 
     this.container = document.createElement('div');
     this.container.className = 'candy-container';
     this.container.style.display = 'inline-block';
+    this.container.style.position = 'relative';
     this.setSize(this.width, this.height);
 
     // clear container
     config.container.innerHTML = '';
     config.container.appendChild(this.container);
+
+    Candy.wrappers.push(this);
   };
 
   Candy.Wrapper.prototype = {
     add: function(layer) {
       this.layers.push(layer);
-
       layer.setSize(layer.width || this.width, layer.height || this.height);
-
+      layer.wrapper = this;
       this.container.appendChild(layer.container);
     },
     insert: function() {
@@ -88,14 +94,19 @@
     }
     this.width = config.width || 0;
     this.height = config.height || 0;
+    this.x = config.x || 0;
+    this.y = config.y || 0;
 
+    this.id = idCounter++;
     this.hitCanvas = new Candy.HitCanvas();
     this.sceneCanvas = new Candy.SceneCanvas();
 
     this.container = document.createElement('div');
     this.container.className = 'candy-layer';
     this.container.style.display = 'inline-block';
-    this.container.style.position = 'relative';
+    this.container.style.position = 'absolute';
+    this.container.style.left = this.x + 'px';
+    this.container.style.top = this.y + 'px';
     this.container.appendChild(this.hitCanvas.canvas);
     this.container.appendChild(this.sceneCanvas.canvas);
 
@@ -131,13 +142,44 @@
 
     },
     moveToTop: function() {
+      var index = this.getIndex(),
+          wrapper = this.wrapper,
+          layers = wrapper.layers;
 
+      layers.splice(index, 1);
+      layers.push(this);
+
+      wrapper.container.removeChild(this.container);
+      wrapper.container.appendChild(this.container);
     },
     moveToBottom: function() {
+      var index = this.getIndex(),
+          wrapper = this.wrapper,
+          layers = wrapper.layers;
 
+      layers.splice(index, 1);
+      layers.unshift(this);
+
+      wrapper.container.removeChild(this.container);
+      wrapper.container.insertBefore(this.container, wrapper.container.firstChild);
     },
     moveTo: function() {
 
+    },
+    getIndex: function() {
+      var layers = this.wrapper.layers,
+          len = layers.length,
+          n = 0,
+          layer;
+
+      for (n=0; n<len; n++) {
+        layer = layers[n];
+        if (this.id === layer.id) {
+          return n;
+        }
+      }
+
+      return null;
     },
     destroy: function() {
 
@@ -154,6 +196,7 @@
     this.width = config.width || 0;
     this.height = config.height || 0;
 
+    this.id = idCounter++;
     this.canvas = document.createElement('canvas');
     this.canvas.className = 'candy-scene-canvas';
     this.canvas.style.display = 'inline-block';
@@ -170,6 +213,7 @@
       this.width = width;
       this.height = height;
 
+      this.id = idCounter++;
       this.canvas.width = width * Candy.pixelRatio;
       this.canvas.style.width = width + 'px';
       this.canvas.height = height * Candy.pixelRatio;
