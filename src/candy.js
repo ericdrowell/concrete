@@ -17,12 +17,18 @@
 
   ////////////////////////////////////////////////////////////// WRAPPER //////////////////////////////////////////////////////////////
   
+  /**
+   * Candy Wrapper constructor
+   * @param {Object} config
+   * @param {Integer} config.width - wrapper width in pixels
+   * @param {Integer} config.height - wrapper height in pixels
+   */
   Candy.Wrapper = function(config) {
     if (!config) {
       config = {};
     }
-    this.width = config.width;
-    this.height = config.height;
+    this.width = 0;
+    this.height = 0;
     this.layers = []; 
     this.id = idCounter++;
 
@@ -30,7 +36,10 @@
     this.container.className = 'candy-container';
     this.container.style.display = 'inline-block';
     this.container.style.position = 'relative';
-    this.setSize(this.width, this.height);
+
+    if (config.width && config.height) {
+      this.setSize(config.width, config.height);
+    }
 
     // clear container
     config.container.innerHTML = '';
@@ -40,35 +49,64 @@
   };
 
   Candy.Wrapper.prototype = {
+    /**
+     * add layer
+     * @param {Candy.Layer} layer
+     */
     add: function(layer) {
       this.layers.push(layer);
       layer.setSize(layer.width || this.width, layer.height || this.height);
       layer.wrapper = this;
       this.container.appendChild(layer.container);
     },
-    insert: function() {
-
-    },
+    /**
+     * set wrapper size
+     * @param {Integer} width - wrapper width in pixels
+     * @param {Integer} height - wrapper height in pixels
+     * @returns {Candy.Wrapper}
+     */
     setSize: function(width, height) {
       this.width = width;
       this.height = height;
       this.container.style.width = this.width + 'px';
       this.container.style.height = this.height + 'px';
+      return this;
     },
+    /**
+     * clear all layers
+     * @returns {Candy.wrapper}
+     */
     clear: function() {
       this.clearScene();
       this.clearHit();
+      return this;
     },
+    /**
+     * clear all layer scene canvases
+     * @returns {Candy.wrapper}
+     */
     clearScene: function() {
       this.layers.forEach(function(layer) {
         layer.clearScene();
       });
+      return this;
     },
+    /**
+     * clear all layer hit canvases
+     * @returns {Candy.wrapper}
+     */
     clearHit: function() {
       this.layers.forEach(function(layer) {
         layer.clearHit();
       });
+      return this;
     },
+    /**
+     * get key associated to coordinate.  This can be used for mouse interactivity.
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {String|null} key
+     */
     getIntersection: function(x, y) {
       var layers = this.layers,
           len = layers.length,
@@ -84,6 +122,12 @@
 
       return null;
     },
+    /** 
+     * convert wrapper into a Candy canvas
+     * @param {Object} config
+     * @param {Number} config.pixelRatio - typically 1 or 2
+     * @returns {Candy.Canvas}
+     */
     toCanvas: function(config) {
       if (!config) {
         config = {};
@@ -100,6 +144,10 @@
 
       return canvas;
     },
+    /** 
+     * get wrapper index from all Candy wrappers
+     * @returns {Integer}
+     */
     getIndex: function() {
       var wrappers = Candy.wrappers,
           len = wrappers.length,
@@ -115,6 +163,9 @@
 
       return null;
     },
+    /**
+     * destroy wrapper
+     */
     destroy: function() {
       // destroy layers
       this.layers.forEach(function(layer) {
@@ -127,7 +178,15 @@
   };
 
   ////////////////////////////////////////////////////////////// LAYER //////////////////////////////////////////////////////////////
-  
+
+  /**
+   * Candy Layer constructor
+   * @param {Object} config
+   * @param {Integer} [config.x]
+   * @param {Integer} [config.y]
+   * @param {Integer} [config.width] - wrapper width in pixels
+   * @param {Integer} [config.height] - wrapper height in pixels
+   */
   Candy.Layer = function(config) {
     if (!config) {
       config = {};
@@ -157,26 +216,47 @@
   };
 
   Candy.Layer.prototype = {
+    /**
+     * set layer position
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Candy.Layer}
+     */
     setPosition: function(x, y) {
       this.x = x;
       this.container.style.left = x + 'px';
-
       this.y = y;
       this.container.style.top = y + 'px';
+      return this;
     },
+    /**
+     * set layer size
+     * @param {Number} width
+     * @param {Number} height
+     * @returns {Candy.Layer}
+     */
     setSize: function(width, height) {
       this.width = width;
       this.container.style.width = width + 'px';
       this.height = height;
       this.container.style.height = height + 'px';
-
       this.sceneCanvas.setSize(width, height);
       this.hitCanvas.setSize(width, height);
+      return this;
     },
+    /**
+     * clear scene and hit canvases
+     * @returns {Candy.Layer}
+     */
     clear: function() {
       this.sceneCanvas.clear();
       this.hitCanvas.clear();
+      return this;
     },
+    /** 
+     * move up
+     * @returns {Candy.Layer}
+     */
     moveUp: function() {
       var index = this.getIndex(),
           wrapper = this.wrapper,
@@ -189,7 +269,13 @@
 
         wrapper.container.insertBefore(this.container, wrapper.container.children[index+2]);
       }
+
+      return this;
     },
+    /** 
+     * move down
+     * @returns {Candy.Layer}
+     */
     moveDown: function() {
       var index = this.getIndex(),
           wrapper = this.wrapper,
@@ -202,7 +288,13 @@
 
         wrapper.container.insertBefore(this.container, wrapper.container.children[index-1]);
       }
+
+      return this;
     },
+    /** 
+     * move to top
+     * @returns {Candy.Layer}
+     */
     moveToTop: function() {
       var index = this.getIndex(),
           wrapper = this.wrapper,
@@ -213,6 +305,10 @@
 
       wrapper.container.appendChild(this.container);
     },
+    /** 
+     * move to bottom
+     * @returns {Candy.Layer}
+     */
     moveToBottom: function() {
       var index = this.getIndex(),
           wrapper = this.wrapper,
@@ -222,7 +318,13 @@
       layers.unshift(this);
 
       wrapper.container.insertBefore(this.container, wrapper.container.firstChild);
+
+      return this;
     },
+    /** 
+     * get layer index from wrapper layers
+     * @returns {Number|null}
+     */
     getIndex: function() {
       var layers = this.wrapper.layers,
           len = layers.length,
@@ -238,6 +340,9 @@
 
       return null;
     },
+    /**
+     * destroy
+     */
     destroy: function() {
       // remove self from layers array
       this.wrapper.layers.splice(this.getIndex(), 1);
@@ -249,6 +354,13 @@
 
   ////////////////////////////////////////////////////////////// SCENE CANVAS //////////////////////////////////////////////////////////////
   
+  /**
+   * Candy SceneCanvas constructor
+   * @param {Object} config
+   * @param {Integer} [config.width] - canvas width in pixels
+   * @param {Integer} [config.height] - canvas height in pixels
+   * @param {Number} [config.pixelRatio] - typically 1 or 2
+   */
   Candy.SceneCanvas = function(config) {
     if (!config) {
       config = {};
@@ -271,6 +383,12 @@
   };
 
   Candy.SceneCanvas.prototype = {
+    /**
+     * set canvas size
+     * @param {Number} width
+     * @param {Number} height
+     * @returns {Candy.SceneCanvas}
+     */
     setSize: function(width, height) {
       this.width = width;
       this.height = height;
@@ -284,10 +402,21 @@
       if (this.pixelRatio !== 1) {
         this.context.scale(this.pixelRatio, this.pixelRatio);
       }
+
+      return this;
     },
+    /** 
+     * clear canvas
+     * @returns {Candy.SceneCanvas}
+     */
     clear: function() {
       this.context.clearRect(0, 0, this.width * this.pixelRatio, this.height * this.pixelRatio);
+      return this;
     },
+    /** 
+     * convert canvas into an image
+     * @param {Function} callback
+     */
     toImage: function(callback) {
       var that = this,
           imageObj = new Image(),
@@ -300,15 +429,43 @@
       };
       imageObj.src = dataURL;
     },
-    download: function() {
-      var dataURL = this.canvas.toDataURL('image/png');
+    /** 
+     * download canvas as an image
+     * @param {Object} config
+     * @param {String} config.fileName
+     */
+    download: function(config) {
+      var dataURL = this.canvas.toDataURL('image/png'),
+          anchor = document.createElement('a'),
+          evObj = document.createEvent('Events'),
+          fileName;
+
+      if (!config) {
+        config = {};
+      }
+
+      fileName = config.fileName || 'canvas.png',
       dataURL = dataURL.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
-      window.open(dataURL);
+
+      // set a attributes
+      anchor.setAttribute('href', dataURL);
+      anchor.setAttribute('download', fileName);
+
+      // simulate click
+      evObj.initEvent('click', true, false);
+      anchor.dispatchEvent(evObj);
     }
   };
 
   ////////////////////////////////////////////////////////////// HIT CANVAS //////////////////////////////////////////////////////////////
   
+  /**
+   * Candy HitCanvas constructor
+   * @param {Object} config
+   * @param {Integer} [config.width] - canvas width in pixels
+   * @param {Integer} [config.height] - canvas height in pixels
+   * @param {Number} [config.pixelRatio] - typically 1 or 2
+   */
   Candy.HitCanvas = function(config) {
     if (!config) {
       config = {};
@@ -333,6 +490,12 @@
   };
 
   Candy.HitCanvas.prototype = {
+    /**
+     * set canvas size
+     * @param {Number} width
+     * @param {Number} height
+     * @returns {Candy.HitCanvas}
+     */
     setSize: function(width, height) {
       this.width = width;
       this.height = height;
@@ -342,9 +505,19 @@
       this.canvas.height = height;
       this.canvas.style.height = height + 'px';
     },
+    /** 
+     * clear canvas
+     * @returns {Candy.HitCanvas}
+     */
     clear: function() {
       this.context.clearRect(0, 0, this.width, this.height);
     },
+    /**
+     * get key associated to coordinate.  This can be used for mouse interactivity.
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {String|null} key
+     */
     getIntersection: function(x, y) {
       var data, red, blue, green, alpha, colorIndex, key;
 
@@ -359,7 +532,11 @@
 
       return key !== undefined  && alpha === 255 ? key : null;
     },
-    addKey: function(key) {
+    /**
+     * register key for hit detection
+     * @returns {Candy.HitCanvas)
+     */
+    registerKey: function(key) {
       var color;
      
       if (!this.keyToColor[key]) {
@@ -367,10 +544,22 @@
         this.colorToKey[color] = key;
         this.keyToColor[key] = color;
       }
+
+      return this;
     },
+    /**
+     * convert rgb components into integer 
+     * @returns {Integer}
+     */
     rgbToInt: function(r, g, b) {
       return (r << 16) + (g << 8) + b;
     },
+    /** 
+     * get color integer from key.  This is needed in order to draw things onto the hit canvas 
+     * for hit detection
+     * @param {String} key
+     * @returns {Integer}
+     */
     getColorFromKey: function(key) {
       var color = this.keyToColor[key].toString(16);
       // pad with zeros

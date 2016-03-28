@@ -271,7 +271,7 @@
 
           candy.add(layer);
 
-          layer.hitCanvas.addKey(12345);
+          layer.hitCanvas.registerKey(12345);
 
           assert.equal(layer.hitCanvas.keyToColor[12345], 0);
 
@@ -468,9 +468,7 @@
           layer.sceneCanvas.context.font = '20px Georgia';
           layer.sceneCanvas.context.fillText('Hello there!', 0, 50);
 
-          candy.toCanvas({
-            pixelRatio: 1
-          }).download();
+          //candy.toCanvas({pixelRatio: 1}).download();
         });
 
         mocha.run();
