@@ -1,7 +1,7 @@
 /*
  * Candy v0.1.0
  * A sweet, fat free, HTML5 canvas library for all ages.
- * Release Date: 3-26-2016
+ * Release Date: 3-27-2016
  * https://github.com/ericdrowell/candy
  * Licensed under the MIT or GPL Version 2 licenses.
  *
@@ -96,8 +96,20 @@
         layer.clearHit();
       });
     },
-    getIntersection: function() {
+    getIntersection: function(x, y) {
+      var layers = this.layers,
+          len = layers.length,
+          n, layer, key;
 
+      for (n=len-1; n>=0; n--) {
+        layer = layers[n];
+        key = layer.hitCanvas.getIntersection(x, y);
+        if (key !== null) {
+          return key;
+        }
+      }
+
+      return null;
     },
     toImage: function() {
 
@@ -108,8 +120,29 @@
     download: function() {
 
     },
-    destroy: function() {
+    getIndex: function() {
+      var wrappers = Candy.wrappers,
+          len = wrappers.length,
+          n = 0,
+          wrapper;
 
+      for (n=0; n<len; n++) {
+        wrapper = wrappers[n];
+        if (this.id === wrapper.id) {
+          return n;
+        }
+      }
+
+      return null;
+    },
+    destroy: function() {
+      // destroy layers
+      this.layers.forEach(function(layer) {
+        layer.destroy();
+      });
+
+      // remove self from wrappers array
+      Candy.wrappers.splice(this.getIndex(), 1);
     }
   };
 
@@ -163,10 +196,30 @@
       this.hitCanvas.clear();
     },
     moveUp: function() {
+      var index = this.getIndex(),
+          wrapper = this.wrapper,
+          layers = wrapper.layers;
 
+      if (index < layers.length - 1) {
+        // swap
+        layers[index] = layers[index+1];
+        layers[index+1] = this;
+
+        wrapper.container.insertBefore(this.container, wrapper.container.children[index+2]);
+      }
     },
     moveDown: function() {
+      var index = this.getIndex(),
+          wrapper = this.wrapper,
+          layers = wrapper.layers;
 
+      if (index > 0) {
+        // swap
+        layers[index] = layers[index-1];
+        layers[index-1] = this;
+
+        wrapper.container.insertBefore(this.container, wrapper.container.children[index-1]);
+      }
     },
     moveToTop: function() {
       var index = this.getIndex(),
@@ -176,7 +229,6 @@
       layers.splice(index, 1);
       layers.push(this);
 
-      wrapper.container.removeChild(this.container);
       wrapper.container.appendChild(this.container);
     },
     moveToBottom: function() {
@@ -187,11 +239,7 @@
       layers.splice(index, 1);
       layers.unshift(this);
 
-      wrapper.container.removeChild(this.container);
       wrapper.container.insertBefore(this.container, wrapper.container.firstChild);
-    },
-    moveTo: function() {
-
     },
     getIndex: function() {
       var layers = this.wrapper.layers,
@@ -209,7 +257,11 @@
       return null;
     },
     destroy: function() {
+      // remove self from layers array
+      this.wrapper.layers.splice(this.getIndex(), 1);
 
+      // remove self from dom
+      this.wrapper.container.removeChild(this.container);
     }
   };
 
@@ -264,7 +316,7 @@
         callback(imageObj);
       };
       imageObj.src = dataURL;
-    },
+    }
   };
 
   ////////////////////////////////////////////////////////////// HIT CANVAS //////////////////////////////////////////////////////////////
@@ -280,8 +332,12 @@
     this.canvas = document.createElement('canvas');
     this.canvas.className = 'candy-hit-canvas';
     this.canvas.style.display = 'none';
-    this.canvas.style.position = 'absolute';
+    this.canvas.style.position = 'relative';
     this.context = this.canvas.getContext('2d');
+
+    this.hitColorIndex = 0;
+    this.keyToColor = {};
+    this.colorToKey = {};
 
     if (this.width && this.height) {
       this.setSize(this.width, this.height);
@@ -301,8 +357,39 @@
     clear: function() {
       this.context.clearRect(0, 0, this.width, this.height);
     },
-    getIntersection: function() {
+    getIntersection: function(x, y) {
+      var data, red, blue, green, alpha, colorIndex, key;
 
+      data = this.context.getImageData(Math.round(x), Math.round(y), 1, 1).data;
+      red = data[0]; 
+      green = data[1]; 
+      blue = data[2]; 
+      alpha = data[3];
+
+      colorIndex = this.rgbToInt(red, green, blue);
+      key = this.colorToKey[colorIndex];
+
+      return key !== undefined  && alpha === 255 ? key : null;
+    },
+    addKey: function(key) {
+      var color;
+     
+      if (!this.keyToColor[key]) {
+        color = this.hitColorIndex++;
+        this.colorToKey[color] = key;
+        this.keyToColor[key] = color;
+      }
+    },
+    rgbToInt: function(r, g, b) {
+      return (r << 16) + (g << 8) + b;
+    },
+    getColorFromKey: function(key) {
+      var color = this.keyToColor[key].toString(16);
+      // pad with zeros
+      while (color.length < 6) {
+        color = '0' + color;
+      }
+      return '#' + color;
     }
   };
 

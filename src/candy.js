@@ -93,8 +93,29 @@
     download: function() {
 
     },
-    destroy: function() {
+    getIndex: function() {
+      var wrappers = Candy.wrappers,
+          len = wrappers.length,
+          n = 0,
+          wrapper;
 
+      for (n=0; n<len; n++) {
+        wrapper = wrappers[n];
+        if (this.id === wrapper.id) {
+          return n;
+        }
+      }
+
+      return null;
+    },
+    destroy: function() {
+      // destroy layers
+      this.layers.forEach(function(layer) {
+        layer.destroy();
+      });
+
+      // remove self from wrappers array
+      Candy.wrappers.splice(this.getIndex(), 1);
     }
   };
 
@@ -148,10 +169,30 @@
       this.hitCanvas.clear();
     },
     moveUp: function() {
+      var index = this.getIndex(),
+          wrapper = this.wrapper,
+          layers = wrapper.layers;
 
+      if (index < layers.length - 1) {
+        // swap
+        layers[index] = layers[index+1];
+        layers[index+1] = this;
+
+        wrapper.container.insertBefore(this.container, wrapper.container.children[index+2]);
+      }
     },
     moveDown: function() {
+      var index = this.getIndex(),
+          wrapper = this.wrapper,
+          layers = wrapper.layers;
 
+      if (index > 0) {
+        // swap
+        layers[index] = layers[index-1];
+        layers[index-1] = this;
+
+        wrapper.container.insertBefore(this.container, wrapper.container.children[index-1]);
+      }
     },
     moveToTop: function() {
       var index = this.getIndex(),
@@ -161,7 +202,6 @@
       layers.splice(index, 1);
       layers.push(this);
 
-      wrapper.container.removeChild(this.container);
       wrapper.container.appendChild(this.container);
     },
     moveToBottom: function() {
@@ -172,11 +212,7 @@
       layers.splice(index, 1);
       layers.unshift(this);
 
-      wrapper.container.removeChild(this.container);
       wrapper.container.insertBefore(this.container, wrapper.container.firstChild);
-    },
-    moveTo: function() {
-
     },
     getIndex: function() {
       var layers = this.wrapper.layers,
@@ -194,7 +230,11 @@
       return null;
     },
     destroy: function() {
+      // remove self from layers array
+      this.wrapper.layers.splice(this.getIndex(), 1);
 
+      // remove self from dom
+      this.wrapper.container.removeChild(this.container);
     }
   };
 
@@ -249,7 +289,7 @@
         callback(imageObj);
       };
       imageObj.src = dataURL;
-    },
+    }
   };
 
   ////////////////////////////////////////////////////////////// HIT CANVAS //////////////////////////////////////////////////////////////
@@ -323,7 +363,7 @@
         color = '0' + color;
       }
       return '#' + color;
-    },
+    }
   };
 
   // export

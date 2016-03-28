@@ -297,6 +297,130 @@
           assert.equal(candy.getIntersection(100, 100), null);
         });
 
+        test('layer moveUp()', function(){
+          var candy = new Candy.Wrapper({
+            width: 500,
+            height: 200,
+            container: candyContainer
+          });
+
+          var layer1 = new Candy.Layer();
+          var layer2 = new Candy.Layer();
+          var layer3 = new Candy.Layer();
+
+          layer1.container.id = 'layer1';
+          layer2.container.id = 'layer2';
+          layer3.container.id = 'layer3';
+
+          candy.add(layer1);
+          candy.add(layer2);
+          candy.add(layer3);
+
+          layer1.sceneCanvas.context.fillStyle = 'red';
+          layer1.sceneCanvas.context.fillRect(0, 0, 50, 50); 
+
+          layer2.sceneCanvas.context.fillStyle = 'yellow';
+          layer2.sceneCanvas.context.fillRect(50, 0, 50, 50); 
+
+          layer3.sceneCanvas.context.fillStyle = 'blue';
+          layer3.sceneCanvas.context.fillRect(100, 0, 50, 50); 
+
+          // check candy.layers order
+          assert.equal(candy.layers[0].container.getAttribute('id'), 'layer1');
+          assert.equal(candy.layers[1].container.getAttribute('id'), 'layer2');
+          assert.equal(candy.layers[2].container.getAttribute('id'), 'layer3');
+
+          // check dom order
+          assert.equal(candy.container.children[0].getAttribute('id'), 'layer1');
+          assert.equal(candy.container.children[1].getAttribute('id'), 'layer2');
+          assert.equal(candy.container.children[2].getAttribute('id'), 'layer3');
+
+          layer1.moveUp();
+
+          // check candy.layers order
+          assert.equal(candy.layers[0].container.getAttribute('id'), 'layer2');
+          assert.equal(candy.layers[1].container.getAttribute('id'), 'layer1');
+          assert.equal(candy.layers[2].container.getAttribute('id'), 'layer3');
+
+          // check dom order
+          assert.equal(candy.container.children[0].getAttribute('id'), 'layer2');
+          assert.equal(candy.container.children[1].getAttribute('id'), 'layer1');
+          assert.equal(candy.container.children[2].getAttribute('id'), 'layer3');
+        });
+
+        test('layer moveDown()', function(){
+          var candy = new Candy.Wrapper({
+            width: 500,
+            height: 200,
+            container: candyContainer
+          });
+
+          var layer1 = new Candy.Layer();
+          var layer2 = new Candy.Layer();
+          var layer3 = new Candy.Layer();
+
+          layer1.container.id = 'layer1';
+          layer2.container.id = 'layer2';
+          layer3.container.id = 'layer3';
+
+          candy.add(layer1);
+          candy.add(layer2);
+          candy.add(layer3);
+
+          layer1.sceneCanvas.context.fillStyle = 'red';
+          layer1.sceneCanvas.context.fillRect(0, 0, 50, 50); 
+
+          layer2.sceneCanvas.context.fillStyle = 'yellow';
+          layer2.sceneCanvas.context.fillRect(50, 0, 50, 50); 
+
+          layer3.sceneCanvas.context.fillStyle = 'blue';
+          layer3.sceneCanvas.context.fillRect(100, 0, 50, 50); 
+
+          // check candy.layers order
+          assert.equal(candy.layers[0].container.getAttribute('id'), 'layer1');
+          assert.equal(candy.layers[1].container.getAttribute('id'), 'layer2');
+          assert.equal(candy.layers[2].container.getAttribute('id'), 'layer3');
+
+          // check dom order
+          assert.equal(candy.container.children[0].getAttribute('id'), 'layer1');
+          assert.equal(candy.container.children[1].getAttribute('id'), 'layer2');
+          assert.equal(candy.container.children[2].getAttribute('id'), 'layer3');
+
+          layer3.moveDown();
+
+          // check candy.layers order
+          assert.equal(candy.layers[0].container.getAttribute('id'), 'layer1');
+          assert.equal(candy.layers[1].container.getAttribute('id'), 'layer3');
+          assert.equal(candy.layers[2].container.getAttribute('id'), 'layer2');
+
+          // check dom order
+          assert.equal(candy.container.children[0].getAttribute('id'), 'layer1');
+          assert.equal(candy.container.children[1].getAttribute('id'), 'layer3');
+          assert.equal(candy.container.children[2].getAttribute('id'), 'layer2');
+        });
+
+        test('destroy layer', function(){
+          var candy = new Candy.Wrapper({
+            width: 500,
+            height: 200,
+            container: candyContainer
+          });
+
+          var layer = new Candy.Layer();
+
+          assert.equal(candy.layers.length, 0);
+
+          candy.add(layer);
+
+          assert.equal(candy.layers.length, 1);
+          assert.equal(candy.container.children.length, 1);
+
+          layer.destroy();
+
+          assert.equal(candy.layers.length, 0);
+          assert.equal(candy.container.children.length, 0);
+        });
+
         mocha.run();
     </script>
   </body>  
