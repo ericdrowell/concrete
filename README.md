@@ -9,3 +9,4 @@ As the creator of KineticJS, author of HTML5 Canvas Cookbook, founder of HTML5Ca
 * pixel ratio support
 * png export
 * download
+* caching
