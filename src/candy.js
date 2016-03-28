@@ -84,14 +84,21 @@
 
       return null;
     },
-    toImage: function() {
+    toCanvas: function(config) {
+      if (!config) {
+        config = {};
+      }
+      var canvas = new Candy.SceneCanvas({
+        pixelRatio: config.pixelRatio,
+        width: this.width,
+        height: this.height
+      });
 
-    },
-    toCanvas: function() {
+      this.layers.forEach(function(layer) {
+        canvas.context.drawImage(layer.sceneCanvas.canvas, 0, 0, layer.width, layer.height);
+      });
 
-    },
-    download: function() {
-
+      return canvas;
     },
     getIndex: function() {
       var wrappers = Candy.wrappers,
@@ -125,10 +132,10 @@
     if (!config) {
       config = {};
     }
-    this.width = config.width || 0;
-    this.height = config.height || 0;
-    this.x = config.x || 0;
-    this.y = config.y || 0;
+    this.x = 0;
+    this.y = 0;
+    this.width = 0;
+    this.height = 0;
 
     this.id = idCounter++;
     this.hitCanvas = new Candy.HitCanvas();
@@ -138,21 +145,23 @@
     this.container.className = 'candy-layer';
     this.container.style.display = 'inline-block';
     this.container.style.position = 'absolute';
-    this.container.style.left = this.x + 'px';
-    this.container.style.top = this.y + 'px';
     this.container.appendChild(this.hitCanvas.canvas);
     this.container.appendChild(this.sceneCanvas.canvas);
 
-    if (this.width && this.height) {
-      this.setSize(this.width, this.height);
+    if (config.x && config.y) {
+      this.setPosition(config.x, config.y);
+    }
+    if (config.width && config.height) {
+      this.setSize(config.width, config.height);
     }
   };
 
   Candy.Layer.prototype = {
-    setX: function(x) {
+    setPosition: function(x, y) {
+      this.x = x;
       this.container.style.left = x + 'px';
-    },
-    setY: function() {
+
+      this.y = y;
       this.container.style.top = y + 'px';
     },
     setSize: function(width, height) {
@@ -245,8 +254,9 @@
       config = {};
     }
 
-    this.width = config.width || 0;
-    this.height = config.height || 0;
+    this.width = 0;
+    this.height = 0;
+    this.pixelRatio = config.pixelRatio || Candy.pixelRatio;
 
     this.id = idCounter++;
     this.canvas = document.createElement('canvas');
@@ -255,8 +265,8 @@
     this.canvas.style.position = 'absolute';
     this.context = this.canvas.getContext('2d');
 
-    if (this.width && this.height) {
-      this.setSize(this.width, this.height);
+    if (config.width && config.height) {
+      this.setSize(config.width, config.height);
     }
   };
 
@@ -266,22 +276,22 @@
       this.height = height;
 
       this.id = idCounter++;
-      this.canvas.width = width * Candy.pixelRatio;
+      this.canvas.width = width * this.pixelRatio;
       this.canvas.style.width = width + 'px';
-      this.canvas.height = height * Candy.pixelRatio;
+      this.canvas.height = height * this.pixelRatio;
       this.canvas.style.height = height + 'px'; 
 
-      if (Candy.pixelRatio !== 1) {
-        this.context.scale(Candy.pixelRatio, Candy.pixelRatio);
+      if (this.pixelRatio !== 1) {
+        this.context.scale(this.pixelRatio, this.pixelRatio);
       }
     },
     clear: function() {
-      this.context.clearRect(0, 0, this.width * Candy.pixelRatio, this.height * Candy.pixelRatio);
+      this.context.clearRect(0, 0, this.width * this.pixelRatio, this.height * this.pixelRatio);
     },
     toImage: function(callback) {
       var that = this,
-          dataURL = this.canvas.toDataURL(),
-          imageObj = new Image();
+          imageObj = new Image(),
+          dataURL = this.canvas.toDataURL('image/png');
 
       imageObj.onload = function() {
         imageObj.width = that.width;
@@ -289,6 +299,11 @@
         callback(imageObj);
       };
       imageObj.src = dataURL;
+    },
+    download: function() {
+      var dataURL = this.canvas.toDataURL('image/png');
+      dataURL = dataURL.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
+      window.open(dataURL);
     }
   };
 
@@ -299,8 +314,8 @@
       config = {};
     }
 
-    this.width = config.width || 0;
-    this.height = config.height || 0;
+    this.width = 0;
+    this.height = 0;
 
     this.canvas = document.createElement('canvas');
     this.canvas.className = 'candy-hit-canvas';
@@ -312,8 +327,8 @@
     this.keyToColor = {};
     this.colorToKey = {};
 
-    if (this.width && this.height) {
-      this.setSize(this.width, this.height);
+    if (config.width && config.height) {
+      this.setSize(config.width, config.height);
     }
   };
 
