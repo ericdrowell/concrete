@@ -8,11 +8,12 @@
   </style>
   <body>
     <div id="controls">
-      <button id="moveUp">Move up</button>
-      <button id="moveDown">Move down</button>
-      <button id="moveToTop">Move to top</button>
-      <button id="moveToBottom">Move to bottom</button>
-      <button id="destroy">Destroy</button>
+      <button id="moveUp">Move selected up</button>
+      <button id="moveDown">Move selected down</button>
+      <button id="moveToTop">Move selected to top</button>
+      <button id="moveToBottom">Move selected to bottom</button>
+      <button id="destroy">Destroy selected</button>
+      <button id="download">Download</button>
     </div>
     <div id="candyContainer"></div>
 
@@ -248,6 +249,10 @@
         if (circle) {
           circle.layer.destroy();
         }
+      });
+
+      document.getElementById('download').addEventListener('click', function() {
+        wrapper.toCanvas().download();
       });
     </script>
   </body>
