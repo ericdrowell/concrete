@@ -16,14 +16,14 @@ gulp.task('clean', function () {
 });
 
 gulp.task('hint', function() {
-  gulp.src('src/candy.js')
+  gulp.src('src/concrete.js')
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 });
 
 gulp.task('build-license-dev', function() {
-  return gulp.src(['license.js', 'src/candy.js'])
-    .pipe(concat('candy-v' + package.version + '.js'))
+  return gulp.src(['license.js', 'src/concrete.js'])
+    .pipe(concat('concrete-v' + package.version + '.js'))
     .pipe(replace('@@VERSION', package.version))
     .pipe(replace('@@DATE', date.getMonth()+1 + '-' + date.getDate() + '-' + date.getFullYear()))
     .pipe(replace('@@YEAR', date.getFullYear()))
@@ -31,15 +31,15 @@ gulp.task('build-license-dev', function() {
 });
 
 gulp.task('build-prod', function() {
-  return gulp.src(['src/candy.js'])
-    .pipe(rename('candy-v' + package.version + '.min.js'))
+  return gulp.src(['src/concrete.js'])
+    .pipe(rename('concrete-v' + package.version + '.min.js'))
     .pipe(uglify())
     .pipe(gulp.dest('build'))
 });
 
 gulp.task('license-prod', function() {
-  return gulp.src(['LICENSE.js', 'build/candy-v' + package.version + '.min.js'])
-    .pipe(concat('candy-v' + package.version + '.min.js'))
+  return gulp.src(['LICENSE.js', 'build/concrete-v' + package.version + '.min.js'])
+    .pipe(concat('concrete-v' + package.version + '.min.js'))
     .pipe(replace('@@VERSION', package.version))
     .pipe(replace('@@DATE', date.getMonth()+1 + '-' + date.getDate() + '-' + date.getFullYear()))
     .pipe(replace('@@YEAR', date.getFullYear()))

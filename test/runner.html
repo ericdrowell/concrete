@@ -1,10 +1,10 @@
 <html>  
   <head>  
     <meta charset="utf-8">
-    <title>Candy Mocha Tests</title>
+    <title>Concrete Mocha Tests</title>
     <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
     <style>
-      #candyContainer {
+      #concreteContainer {
         display: inline-block;
         border: 2px solid #ccc;
         margin-left: 10px;
@@ -19,34 +19,34 @@
     </style>
   </head>  
   <body>  
-    <h1>Candy Tests</h1>
-    <div id="candyContainer"></div>
+    <h1>Concrete Tests</h1>
+    <div id="concreteContainer"></div>
     <div id="imageContainer"></div>
     <div id="mocha"></div>
 
     <script src="../node_modules/mocha/mocha.js"></script>
     <script src="../node_modules/chai/chai.js"></script>
-    <script src="../src/candy.js"></script>
+    <script src="../src/concrete.js"></script>
     <script>
         var assert = chai.assert,
-            candyContainer = document.getElementById('candyContainer');
+            concreteContainer = document.getElementById('concreteContainer');
 
         mocha.setup('tdd');
 
-        test('instantiate Candy.Wrapper', function(){
-          var candy = new Candy.Wrapper({
+        test('instantiate Concrete.Wrapper', function(){
+          var concrete = new Concrete.Wrapper({
             width: 500,
             height: 200,
-            container: candyContainer
+            container: concreteContainer
           });
 
-          assert.equal(candy.width, 500);
-          assert.equal(candy.height, 200);
-          assert.ok(candy.container);
+          assert.equal(concrete.width, 500);
+          assert.equal(concrete.height, 200);
+          assert.ok(concrete.container);
         });
 
         test('canvas toImage', function(done){
-          var canvas = new Candy.SceneCanvas({
+          var canvas = new Concrete.SceneCanvas({
             width: 500,
             height: 200
           });
@@ -64,41 +64,41 @@
           });
         });
 
-        test('instantiate Candy.Layer', function(){
-          var layer = new Candy.Layer();
+        test('instantiate Concrete.Layer', function(){
+          var layer = new Concrete.Layer();
 
           assert.ok(layer.sceneCanvas);
           assert.ok(layer.hitCanvas);
         });
 
         test('add layer', function(){
-          var candy = new Candy.Wrapper({
+          var concrete = new Concrete.Wrapper({
             width: 500,
             height: 200,
-            container: candyContainer
+            container: concreteContainer
           });
 
-          var layer = new Candy.Layer();
+          var layer = new Concrete.Layer();
 
-          assert.equal(candy.layers.length, 0);
+          assert.equal(concrete.layers.length, 0);
 
-          candy.add(layer);
+          concrete.add(layer);
 
-          assert.equal(candy.layers.length, 1);
+          assert.equal(concrete.layers.length, 1);
           assert.equal(layer.width, 500);
           assert.equal(layer.height, 200);
         });
 
         test('draw, clear, draw onto canvas', function(){
-          var candy = new Candy.Wrapper({
+          var concrete = new Concrete.Wrapper({
             width: 500,
             height: 200,
-            container: candyContainer
+            container: concreteContainer
           });
 
-          var layer = new Candy.Layer();
+          var layer = new Concrete.Layer();
 
-          candy.add(layer);
+          concrete.add(layer);
 
           layer.sceneCanvas.context.beginPath();
           layer.sceneCanvas.context.fillStyle = 'red';
@@ -114,19 +114,19 @@
         });
 
         test('three layers', function(){
-          var candy = new Candy.Wrapper({
+          var concrete = new Concrete.Wrapper({
             width: 500,
             height: 200,
-            container: candyContainer
+            container: concreteContainer
           });
 
-          var layer1 = new Candy.Layer();
-          var layer2 = new Candy.Layer();
-          var layer3 = new Candy.Layer();
+          var layer1 = new Concrete.Layer();
+          var layer2 = new Concrete.Layer();
+          var layer3 = new Concrete.Layer();
 
-          candy.add(layer1);
-          candy.add(layer2);
-          candy.add(layer3);
+          concrete.add(layer1);
+          concrete.add(layer2);
+          concrete.add(layer3);
 
           layer1.sceneCanvas.context.fillStyle = 'red';
           layer1.sceneCanvas.context.fillRect(0, 0, 50, 50); 
@@ -139,19 +139,19 @@
         });
 
         test('layer getIndex()', function(){
-          var candy = new Candy.Wrapper({
+          var concrete = new Concrete.Wrapper({
             width: 500,
             height: 200,
-            container: candyContainer
+            container: concreteContainer
           });
 
-          var layer1 = new Candy.Layer();
-          var layer2 = new Candy.Layer();
-          var layer3 = new Candy.Layer();
+          var layer1 = new Concrete.Layer();
+          var layer2 = new Concrete.Layer();
+          var layer3 = new Concrete.Layer();
 
-          candy.add(layer1);
-          candy.add(layer2);
-          candy.add(layer3);
+          concrete.add(layer1);
+          concrete.add(layer2);
+          concrete.add(layer3);
 
           assert.equal(layer1.getIndex(), 0);
           assert.equal(layer2.getIndex(), 1);
@@ -159,23 +159,23 @@
         });
 
         test('layer moveToTop()', function(){
-          var candy = new Candy.Wrapper({
+          var concrete = new Concrete.Wrapper({
             width: 500,
             height: 200,
-            container: candyContainer
+            container: concreteContainer
           });
 
-          var layer1 = new Candy.Layer();
-          var layer2 = new Candy.Layer();
-          var layer3 = new Candy.Layer();
+          var layer1 = new Concrete.Layer();
+          var layer2 = new Concrete.Layer();
+          var layer3 = new Concrete.Layer();
 
           layer1.container.id = 'layer1';
           layer2.container.id = 'layer2';
           layer3.container.id = 'layer3';
 
-          candy.add(layer1);
-          candy.add(layer2);
-          candy.add(layer3);
+          concrete.add(layer1);
+          concrete.add(layer2);
+          concrete.add(layer3);
 
           layer1.sceneCanvas.context.fillStyle = 'red';
           layer1.sceneCanvas.context.fillRect(0, 0, 50, 50); 
@@ -186,47 +186,47 @@
           layer3.sceneCanvas.context.fillStyle = 'blue';
           layer3.sceneCanvas.context.fillRect(100, 0, 50, 50); 
 
-          // check candy.layers order
-          assert.equal(candy.layers[0].container.getAttribute('id'), 'layer1');
-          assert.equal(candy.layers[1].container.getAttribute('id'), 'layer2');
-          assert.equal(candy.layers[2].container.getAttribute('id'), 'layer3');
+          // check concrete.layers order
+          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer1');
+          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer2');
+          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer3');
 
           // check dom order
-          assert.equal(candy.container.children[0].getAttribute('id'), 'layer1');
-          assert.equal(candy.container.children[1].getAttribute('id'), 'layer2');
-          assert.equal(candy.container.children[2].getAttribute('id'), 'layer3');
+          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer1');
+          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer2');
+          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer3');
 
           layer1.moveToTop();
 
-          // check candy.layers order
-          assert.equal(candy.layers[0].container.getAttribute('id'), 'layer2');
-          assert.equal(candy.layers[1].container.getAttribute('id'), 'layer3');
-          assert.equal(candy.layers[2].container.getAttribute('id'), 'layer1');
+          // check concrete.layers order
+          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer2');
+          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer3');
+          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer1');
 
           // check dom order
-          assert.equal(candy.container.children[0].getAttribute('id'), 'layer2');
-          assert.equal(candy.container.children[1].getAttribute('id'), 'layer3');
-          assert.equal(candy.container.children[2].getAttribute('id'), 'layer1');
+          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer2');
+          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer3');
+          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer1');
         });
 
         test('layer moveToBottom()', function(){
-          var candy = new Candy.Wrapper({
+          var concrete = new Concrete.Wrapper({
             width: 500,
             height: 200,
-            container: candyContainer
+            container: concreteContainer
           });
 
-          var layer1 = new Candy.Layer();
-          var layer2 = new Candy.Layer();
-          var layer3 = new Candy.Layer();
+          var layer1 = new Concrete.Layer();
+          var layer2 = new Concrete.Layer();
+          var layer3 = new Concrete.Layer();
 
           layer1.container.id = 'layer1';
           layer2.container.id = 'layer2';
           layer3.container.id = 'layer3';
 
-          candy.add(layer1);
-          candy.add(layer2);
-          candy.add(layer3);
+          concrete.add(layer1);
+          concrete.add(layer2);
+          concrete.add(layer3);
 
           layer1.sceneCanvas.context.fillStyle = 'red';
           layer1.sceneCanvas.context.fillRect(0, 0, 50, 50); 
@@ -237,39 +237,39 @@
           layer3.sceneCanvas.context.fillStyle = 'blue';
           layer3.sceneCanvas.context.fillRect(100, 0, 50, 50); 
 
-          // check candy.layers order
-          assert.equal(candy.layers[0].container.getAttribute('id'), 'layer1');
-          assert.equal(candy.layers[1].container.getAttribute('id'), 'layer2');
-          assert.equal(candy.layers[2].container.getAttribute('id'), 'layer3');
+          // check concrete.layers order
+          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer1');
+          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer2');
+          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer3');
 
           // check dom order
-          assert.equal(candy.container.children[0].getAttribute('id'), 'layer1');
-          assert.equal(candy.container.children[1].getAttribute('id'), 'layer2');
-          assert.equal(candy.container.children[2].getAttribute('id'), 'layer3');
+          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer1');
+          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer2');
+          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer3');
 
           layer3.moveToBottom();
 
-          // check candy.layers order
-          assert.equal(candy.layers[0].container.getAttribute('id'), 'layer3');
-          assert.equal(candy.layers[1].container.getAttribute('id'), 'layer1');
-          assert.equal(candy.layers[2].container.getAttribute('id'), 'layer2');
+          // check concrete.layers order
+          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer3');
+          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer1');
+          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer2');
 
           // check dom order
-          assert.equal(candy.container.children[0].getAttribute('id'), 'layer3');
-          assert.equal(candy.container.children[1].getAttribute('id'), 'layer1');
-          assert.equal(candy.container.children[2].getAttribute('id'), 'layer2');
+          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer3');
+          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer1');
+          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer2');
         });
 
         test('hit detection', function(){
-          var candy = new Candy.Wrapper({
+          var concrete = new Concrete.Wrapper({
             width: 500,
             height: 200,
-            container: candyContainer
+            container: concreteContainer
           });
 
-          var layer = new Candy.Layer();
+          var layer = new Concrete.Layer();
 
-          candy.add(layer);
+          concrete.add(layer);
 
           layer.hitCanvas.registerKey(12345);
 
@@ -290,32 +290,32 @@
           assert.equal(layer.hitCanvas.getIntersection(100, 100), null);
 
           // in red rectangle
-          assert.equal(candy.getIntersection(0, 0), 12345);
-          assert.equal(candy.getIntersection(5, 5), 12345);
-          assert.equal(candy.getIntersection(49, 49), 12345);
+          assert.equal(concrete.getIntersection(0, 0), 12345);
+          assert.equal(concrete.getIntersection(5, 5), 12345);
+          assert.equal(concrete.getIntersection(49, 49), 12345);
 
           // out of red rectangle
-          assert.equal(candy.getIntersection(100, 100), null);
+          assert.equal(concrete.getIntersection(100, 100), null);
         });
 
         test('layer moveUp()', function(){
-          var candy = new Candy.Wrapper({
+          var concrete = new Concrete.Wrapper({
             width: 500,
             height: 200,
-            container: candyContainer
+            container: concreteContainer
           });
 
-          var layer1 = new Candy.Layer();
-          var layer2 = new Candy.Layer();
-          var layer3 = new Candy.Layer();
+          var layer1 = new Concrete.Layer();
+          var layer2 = new Concrete.Layer();
+          var layer3 = new Concrete.Layer();
 
           layer1.container.id = 'layer1';
           layer2.container.id = 'layer2';
           layer3.container.id = 'layer3';
 
-          candy.add(layer1);
-          candy.add(layer2);
-          candy.add(layer3);
+          concrete.add(layer1);
+          concrete.add(layer2);
+          concrete.add(layer3);
 
           layer1.sceneCanvas.context.fillStyle = 'red';
           layer1.sceneCanvas.context.fillRect(0, 0, 50, 50); 
@@ -326,47 +326,47 @@
           layer3.sceneCanvas.context.fillStyle = 'blue';
           layer3.sceneCanvas.context.fillRect(100, 0, 50, 50); 
 
-          // check candy.layers order
-          assert.equal(candy.layers[0].container.getAttribute('id'), 'layer1');
-          assert.equal(candy.layers[1].container.getAttribute('id'), 'layer2');
-          assert.equal(candy.layers[2].container.getAttribute('id'), 'layer3');
+          // check concrete.layers order
+          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer1');
+          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer2');
+          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer3');
 
           // check dom order
-          assert.equal(candy.container.children[0].getAttribute('id'), 'layer1');
-          assert.equal(candy.container.children[1].getAttribute('id'), 'layer2');
-          assert.equal(candy.container.children[2].getAttribute('id'), 'layer3');
+          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer1');
+          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer2');
+          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer3');
 
           layer1.moveUp();
 
-          // check candy.layers order
-          assert.equal(candy.layers[0].container.getAttribute('id'), 'layer2');
-          assert.equal(candy.layers[1].container.getAttribute('id'), 'layer1');
-          assert.equal(candy.layers[2].container.getAttribute('id'), 'layer3');
+          // check concrete.layers order
+          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer2');
+          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer1');
+          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer3');
 
           // check dom order
-          assert.equal(candy.container.children[0].getAttribute('id'), 'layer2');
-          assert.equal(candy.container.children[1].getAttribute('id'), 'layer1');
-          assert.equal(candy.container.children[2].getAttribute('id'), 'layer3');
+          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer2');
+          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer1');
+          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer3');
         });
 
         test('layer moveDown()', function(){
-          var candy = new Candy.Wrapper({
+          var concrete = new Concrete.Wrapper({
             width: 500,
             height: 200,
-            container: candyContainer
+            container: concreteContainer
           });
 
-          var layer1 = new Candy.Layer();
-          var layer2 = new Candy.Layer();
-          var layer3 = new Candy.Layer();
+          var layer1 = new Concrete.Layer();
+          var layer2 = new Concrete.Layer();
+          var layer3 = new Concrete.Layer();
 
           layer1.container.id = 'layer1';
           layer2.container.id = 'layer2';
           layer3.container.id = 'layer3';
 
-          candy.add(layer1);
-          candy.add(layer2);
-          candy.add(layer3);
+          concrete.add(layer1);
+          concrete.add(layer2);
+          concrete.add(layer3);
 
           layer1.sceneCanvas.context.fillStyle = 'red';
           layer1.sceneCanvas.context.fillRect(0, 0, 50, 50); 
@@ -377,68 +377,68 @@
           layer3.sceneCanvas.context.fillStyle = 'blue';
           layer3.sceneCanvas.context.fillRect(100, 0, 50, 50); 
 
-          // check candy.layers order
-          assert.equal(candy.layers[0].container.getAttribute('id'), 'layer1');
-          assert.equal(candy.layers[1].container.getAttribute('id'), 'layer2');
-          assert.equal(candy.layers[2].container.getAttribute('id'), 'layer3');
+          // check concrete.layers order
+          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer1');
+          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer2');
+          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer3');
 
           // check dom order
-          assert.equal(candy.container.children[0].getAttribute('id'), 'layer1');
-          assert.equal(candy.container.children[1].getAttribute('id'), 'layer2');
-          assert.equal(candy.container.children[2].getAttribute('id'), 'layer3');
+          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer1');
+          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer2');
+          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer3');
 
           layer3.moveDown();
 
-          // check candy.layers order
-          assert.equal(candy.layers[0].container.getAttribute('id'), 'layer1');
-          assert.equal(candy.layers[1].container.getAttribute('id'), 'layer3');
-          assert.equal(candy.layers[2].container.getAttribute('id'), 'layer2');
+          // check concrete.layers order
+          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer1');
+          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer3');
+          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer2');
 
           // check dom order
-          assert.equal(candy.container.children[0].getAttribute('id'), 'layer1');
-          assert.equal(candy.container.children[1].getAttribute('id'), 'layer3');
-          assert.equal(candy.container.children[2].getAttribute('id'), 'layer2');
+          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer1');
+          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer3');
+          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer2');
         });
 
         test('destroy layer', function(){
-          var candy = new Candy.Wrapper({
+          var concrete = new Concrete.Wrapper({
             width: 500,
             height: 200,
-            container: candyContainer
+            container: concreteContainer
           });
 
-          var layer = new Candy.Layer();
+          var layer = new Concrete.Layer();
 
-          assert.equal(candy.layers.length, 0);
+          assert.equal(concrete.layers.length, 0);
 
-          candy.add(layer);
+          concrete.add(layer);
 
-          assert.equal(candy.layers.length, 1);
-          assert.equal(candy.container.children.length, 1);
+          assert.equal(concrete.layers.length, 1);
+          assert.equal(concrete.container.children.length, 1);
 
           layer.destroy();
 
-          assert.equal(candy.layers.length, 0);
-          assert.equal(candy.container.children.length, 0);
+          assert.equal(concrete.layers.length, 0);
+          assert.equal(concrete.container.children.length, 0);
         });
 
         test('wrapper toCanvas() and then toImage()', function(done){
-          var candy = new Candy.Wrapper({
+          var concrete = new Concrete.Wrapper({
             width: 500,
             height: 200,
-            container: candyContainer
+            container: concreteContainer
           });
 
-          var layer = new Candy.Layer();
+          var layer = new Concrete.Layer();
 
-          candy.add(layer);
+          concrete.add(layer);
 
           layer.sceneCanvas.context.beginPath();
           layer.sceneCanvas.context.fillStyle = 'red';
           layer.sceneCanvas.context.font = '20px Georgia';
           layer.sceneCanvas.context.fillText('Hello there!', 0, 50);
 
-          var canvas = candy.toCanvas();
+          var canvas = concrete.toCanvas();
 
           canvas.toImage(function(image) {
             imageContainer.innerHTML = '';
@@ -450,15 +450,15 @@
         });
 
         test('wrapper toCanvas() and then download()', function(){
-          var candy = new Candy.Wrapper({
+          var concrete = new Concrete.Wrapper({
             width: 500,
             height: 200,
-            container: candyContainer
+            container: concreteContainer
           });
 
-          var layer = new Candy.Layer();
+          var layer = new Concrete.Layer();
 
-          candy.add(layer);
+          concrete.add(layer);
 
           layer.sceneCanvas.context.fillStyle = 'white';
           layer.sceneCanvas.context.fillRect(0, 0, 500, 200);
@@ -468,7 +468,7 @@
           layer.sceneCanvas.context.font = '20px Georgia';
           layer.sceneCanvas.context.fillText('Hello there!', 0, 50);
 
-          //candy.toCanvas({pixelRatio: 1}).download();
+          //concrete.toCanvas({pixelRatio: 1}).download();
         });
 
         mocha.run();

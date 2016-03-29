@@ -1,5 +1,5 @@
 {
-  "name": "candy",
+  "name": "concrete",
   "version": "0.1.0",
   "devDependencies": {
     "chai": "^3.4.1",
@@ -17,7 +17,7 @@
   "readmeFilename": "README.md",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ericdrowell/candy.git"
+    "url": "git://github.com/ericdrowell/concrete.git"
   },
   "author": "Eric Rowell",
   "license": "MIT"

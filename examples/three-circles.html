@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <style>
-    #candyContainer {
+    #concreteContainer {
       display: inline-block;
       border: 2px solid #eee;
     }
@@ -15,9 +15,9 @@
       <button id="destroy">Destroy selected</button>
       <button id="download">Download</button>
     </div>
-    <div id="candyContainer"></div>
+    <div id="concreteContainer"></div>
 
-    <script src="../src/candy.js"></script>
+    <script src="../src/concrete.js"></script>
 
     <script>
       function drawSceneCircles() {
@@ -109,24 +109,24 @@
         return false;
       }
 
-      var candyContainer = document.getElementById('candyContainer');
+      var concreteContainer = document.getElementById('concreteContainer');
 
       // create wrapper
-      var wrapper = new Candy.Wrapper({
+      var wrapper = new Concrete.Wrapper({
         width: 400,
         height: 200,
-        container: candyContainer
+        container: concreteContainer
       });
 
       // create layers
-      var layer1 = new Candy.Layer();
-      var layer2 = new Candy.Layer();
-      var layer3 = new Candy.Layer();
+      var layer1 = new Concrete.Layer();
+      var layer2 = new Concrete.Layer();
+      var layer3 = new Concrete.Layer();
 
       // add layers
       wrapper.add(layer1).add(layer2).add(layer3);
 
-      // create a scene graph (you don't need a scene graph for Candy, but in this
+      // create a scene graph (you don't need a scene graph for Concrete, but in this
       // example we will use one
       var circles = [
         {
@@ -169,9 +169,9 @@
       // draw visible circles
       drawSceneCircles();
 
-      // add candy container handlers
-      candyContainer.addEventListener('mousemove', function(evt) {
-        var boundingRect = candyContainer.getBoundingClientRect(),
+      // add concrete container handlers
+      concreteContainer.addEventListener('mousemove', function(evt) {
+        var boundingRect = concreteContainer.getBoundingClientRect(),
             x = evt.clientX - boundingRect.left,
             y = evt.clientY - boundingRect.top,
             key = wrapper.getIntersection(x, y),
@@ -190,8 +190,8 @@
         drawSceneCircles();
       });
 
-      candyContainer.addEventListener('click', function(evt) {
-        var boundingRect = candyContainer.getBoundingClientRect(),
+      concreteContainer.addEventListener('click', function(evt) {
+        var boundingRect = concreteContainer.getBoundingClientRect(),
             x = evt.clientX - boundingRect.left,
             y = evt.clientY - boundingRect.top,
             key = wrapper.getIntersection(x, y),
@@ -252,7 +252,9 @@
       });
 
       document.getElementById('download').addEventListener('click', function() {
-        wrapper.toCanvas().download();
+        wrapper.toCanvas().download({
+          fileName: 'three-circles.png'
+        });
       });
     </script>
   </body>

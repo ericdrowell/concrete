@@ -1,6 +1,7 @@
 /*
- * Candy v@@VERSION
- * A sweet, fat free, HTML5 canvas library for all ages.
+ * Concrete v@@VERSION
+ * Concrete is a lightweight Html5 Canvas framework that supports canvas projects by enabling
+ * hit detection, layer support, pixel ratio management, exports, and downloads
  * Release Date: @@DATE
  * https://github.com/ericdrowell/candy
  * Licensed under the MIT or GPL Version 2 licenses.

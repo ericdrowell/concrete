@@ -1,8 +1,8 @@
 (function() {
-  var Candy = {},
+  var Concrete = {},
       idCounter = 0;
 
-  Candy.pixelRatio = (function() {
+  Concrete.pixelRatio = (function() {
     // client browsers
     if (window && window.navigator && window.navigator.userAgent && !/PhantomJS/.test(window.navigator.userAgent)) {
       return 2;
@@ -13,17 +13,17 @@
     }
   })();
 
-  Candy.wrappers = [];
+  Concrete.wrappers = [];
 
   ////////////////////////////////////////////////////////////// WRAPPER //////////////////////////////////////////////////////////////
   
   /**
-   * Candy Wrapper constructor
+   * Concrete Wrapper constructor
    * @param {Object} config
    * @param {Integer} config.width - wrapper width in pixels
    * @param {Integer} config.height - wrapper height in pixels
    */
-  Candy.Wrapper = function(config) {
+  Concrete.Wrapper = function(config) {
     if (!config) {
       config = {};
     }
@@ -33,7 +33,7 @@
     this.id = idCounter++;
 
     this.container = document.createElement('div');
-    this.container.className = 'candy-container';
+    this.container.className = 'concrete-container';
     this.container.style.display = 'inline-block';
     this.container.style.position = 'relative';
 
@@ -45,14 +45,14 @@
     config.container.innerHTML = '';
     config.container.appendChild(this.container);
 
-    Candy.wrappers.push(this);
+    Concrete.wrappers.push(this);
   };
 
-  Candy.Wrapper.prototype = {
+  Concrete.Wrapper.prototype = {
     /**
      * add layer
-     * @param {Candy.Layer} layer
-     * @returns {Candy.Wrapper}
+     * @param {Concrete.Layer} layer
+     * @returns {Concrete.Wrapper}
      */
     add: function(layer) {
       this.layers.push(layer);
@@ -65,7 +65,7 @@
      * set wrapper size
      * @param {Integer} width - wrapper width in pixels
      * @param {Integer} height - wrapper height in pixels
-     * @returns {Candy.Wrapper}
+     * @returns {Concrete.Wrapper}
      */
     setSize: function(width, height) {
       this.width = width;
@@ -76,7 +76,7 @@
     },
     /**
      * clear all layers
-     * @returns {Candy.wrapper}
+     * @returns {Concrete.wrapper}
      */
     clear: function() {
       this.clearScene();
@@ -85,7 +85,7 @@
     },
     /**
      * clear all layer scene canvases
-     * @returns {Candy.wrapper}
+     * @returns {Concrete.wrapper}
      */
     clearScene: function() {
       this.layers.forEach(function(layer) {
@@ -95,7 +95,7 @@
     },
     /**
      * clear all layer hit canvases
-     * @returns {Candy.wrapper}
+     * @returns {Concrete.wrapper}
      */
     clearHit: function() {
       this.layers.forEach(function(layer) {
@@ -125,16 +125,16 @@
       return null;
     },
     /** 
-     * convert wrapper into a Candy canvas
+     * convert wrapper into a Concrete canvas
      * @param {Object} config
      * @param {Number} config.pixelRatio - typically 1 or 2
-     * @returns {Candy.Canvas}
+     * @returns {Concrete.Canvas}
      */
     toCanvas: function(config) {
       if (!config) {
         config = {};
       }
-      var canvas = new Candy.SceneCanvas({
+      var canvas = new Concrete.SceneCanvas({
         pixelRatio: config.pixelRatio,
         width: this.width,
         height: this.height
@@ -147,11 +147,11 @@
       return canvas;
     },
     /** 
-     * get wrapper index from all Candy wrappers
+     * get wrapper index from all Concrete wrappers
      * @returns {Integer}
      */
     getIndex: function() {
-      var wrappers = Candy.wrappers,
+      var wrappers = Concrete.wrappers,
           len = wrappers.length,
           n = 0,
           wrapper;
@@ -175,21 +175,21 @@
       });
 
       // remove self from wrappers array
-      Candy.wrappers.splice(this.getIndex(), 1);
+      Concrete.wrappers.splice(this.getIndex(), 1);
     }
   };
 
   ////////////////////////////////////////////////////////////// LAYER //////////////////////////////////////////////////////////////
 
   /**
-   * Candy Layer constructor
+   * Concrete Layer constructor
    * @param {Object} config
    * @param {Integer} [config.x]
    * @param {Integer} [config.y]
    * @param {Integer} [config.width] - wrapper width in pixels
    * @param {Integer} [config.height] - wrapper height in pixels
    */
-  Candy.Layer = function(config) {
+  Concrete.Layer = function(config) {
     if (!config) {
       config = {};
     }
@@ -199,11 +199,11 @@
     this.height = 0;
 
     this.id = idCounter++;
-    this.hitCanvas = new Candy.HitCanvas();
-    this.sceneCanvas = new Candy.SceneCanvas();
+    this.hitCanvas = new Concrete.HitCanvas();
+    this.sceneCanvas = new Concrete.SceneCanvas();
 
     this.container = document.createElement('div');
-    this.container.className = 'candy-layer';
+    this.container.className = 'concrete-layer';
     this.container.style.display = 'inline-block';
     this.container.style.position = 'absolute';
     this.container.appendChild(this.hitCanvas.canvas);
@@ -217,12 +217,12 @@
     }
   };
 
-  Candy.Layer.prototype = {
+  Concrete.Layer.prototype = {
     /**
      * set layer position
      * @param {Number} x
      * @param {Number} y
-     * @returns {Candy.Layer}
+     * @returns {Concrete.Layer}
      */
     setPosition: function(x, y) {
       this.x = x;
@@ -235,7 +235,7 @@
      * set layer size
      * @param {Number} width
      * @param {Number} height
-     * @returns {Candy.Layer}
+     * @returns {Concrete.Layer}
      */
     setSize: function(width, height) {
       this.width = width;
@@ -248,7 +248,7 @@
     },
     /**
      * clear scene and hit canvases
-     * @returns {Candy.Layer}
+     * @returns {Concrete.Layer}
      */
     clear: function() {
       this.sceneCanvas.clear();
@@ -257,7 +257,7 @@
     },
     /** 
      * move up
-     * @returns {Candy.Layer}
+     * @returns {Concrete.Layer}
      */
     moveUp: function() {
       var index = this.getIndex(),
@@ -276,7 +276,7 @@
     },
     /** 
      * move down
-     * @returns {Candy.Layer}
+     * @returns {Concrete.Layer}
      */
     moveDown: function() {
       var index = this.getIndex(),
@@ -295,7 +295,7 @@
     },
     /** 
      * move to top
-     * @returns {Candy.Layer}
+     * @returns {Concrete.Layer}
      */
     moveToTop: function() {
       var index = this.getIndex(),
@@ -309,7 +309,7 @@
     },
     /** 
      * move to bottom
-     * @returns {Candy.Layer}
+     * @returns {Concrete.Layer}
      */
     moveToBottom: function() {
       var index = this.getIndex(),
@@ -357,24 +357,24 @@
   ////////////////////////////////////////////////////////////// SCENE CANVAS //////////////////////////////////////////////////////////////
   
   /**
-   * Candy SceneCanvas constructor
+   * Concrete SceneCanvas constructor
    * @param {Object} config
    * @param {Integer} [config.width] - canvas width in pixels
    * @param {Integer} [config.height] - canvas height in pixels
    * @param {Number} [config.pixelRatio] - typically 1 or 2
    */
-  Candy.SceneCanvas = function(config) {
+  Concrete.SceneCanvas = function(config) {
     if (!config) {
       config = {};
     }
 
     this.width = 0;
     this.height = 0;
-    this.pixelRatio = config.pixelRatio || Candy.pixelRatio;
+    this.pixelRatio = config.pixelRatio || Concrete.pixelRatio;
 
     this.id = idCounter++;
     this.canvas = document.createElement('canvas');
-    this.canvas.className = 'candy-scene-canvas';
+    this.canvas.className = 'concrete-scene-canvas';
     this.canvas.style.display = 'inline-block';
     this.canvas.style.position = 'absolute';
     this.context = this.canvas.getContext('2d');
@@ -384,12 +384,12 @@
     }
   };
 
-  Candy.SceneCanvas.prototype = {
+  Concrete.SceneCanvas.prototype = {
     /**
      * set canvas size
      * @param {Number} width
      * @param {Number} height
-     * @returns {Candy.SceneCanvas}
+     * @returns {Concrete.SceneCanvas}
      */
     setSize: function(width, height) {
       this.width = width;
@@ -409,7 +409,7 @@
     },
     /** 
      * clear canvas
-     * @returns {Candy.SceneCanvas}
+     * @returns {Concrete.SceneCanvas}
      */
     clear: function() {
       this.context.clearRect(0, 0, this.width * this.pixelRatio, this.height * this.pixelRatio);
@@ -462,13 +462,13 @@
   ////////////////////////////////////////////////////////////// HIT CANVAS //////////////////////////////////////////////////////////////
   
   /**
-   * Candy HitCanvas constructor
+   * Concrete HitCanvas constructor
    * @param {Object} config
    * @param {Integer} [config.width] - canvas width in pixels
    * @param {Integer} [config.height] - canvas height in pixels
    * @param {Number} [config.pixelRatio] - typically 1 or 2
    */
-  Candy.HitCanvas = function(config) {
+  Concrete.HitCanvas = function(config) {
     if (!config) {
       config = {};
     }
@@ -477,7 +477,7 @@
     this.height = 0;
 
     this.canvas = document.createElement('canvas');
-    this.canvas.className = 'candy-hit-canvas';
+    this.canvas.className = 'concrete-hit-canvas';
     this.canvas.style.display = 'none';
     this.canvas.style.position = 'relative';
     this.context = this.canvas.getContext('2d');
@@ -491,12 +491,12 @@
     }
   };
 
-  Candy.HitCanvas.prototype = {
+  Concrete.HitCanvas.prototype = {
     /**
      * set canvas size
      * @param {Number} width
      * @param {Number} height
-     * @returns {Candy.HitCanvas}
+     * @returns {Concrete.HitCanvas}
      */
     setSize: function(width, height) {
       this.width = width;
@@ -509,7 +509,7 @@
     },
     /** 
      * clear canvas
-     * @returns {Candy.HitCanvas}
+     * @returns {Concrete.HitCanvas}
      */
     clear: function() {
       this.context.clearRect(0, 0, this.width, this.height);
@@ -536,7 +536,7 @@
     },
     /**
      * register key for hit detection
-     * @returns {Candy.HitCanvas)
+     * @returns {Concrete.HitCanvas)
      */
     registerKey: function(key) {
       var color;
@@ -573,5 +573,5 @@
   };
 
   // export
-  window.Candy = Candy;
+  window.Concrete = Concrete;
 })();
