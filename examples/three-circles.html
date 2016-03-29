@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    #candyContainer {
+      display: inline-block;
+      border: 2px solid #eee;
+    }
+  </style>
+  <body>
+    <div id="controls">
+      <button id="moveUp">Move up</button>
+      <button id="moveDown">Move down</button>
+      <button id="moveToTop">Move to top</button>
+      <button id="moveToBottom">Move to bottom</button>
+      <button id="destroy">Destroy</button>
+    </div>
+    <div id="candyContainer"></div>
+
+    <script src="../src/candy.js"></script>
+
+    <script>
+      function drawSceneCircles() {
+        circles.forEach(function(circle) {
+          drawSceneCircle(circle);
+        });
+      }
+
+      function drawHitCircles() {
+        circles.forEach(function(circle) {
+          drawHitCircle(circle);
+        });
+      }
+
+      function drawSceneCircle(config) {
+        var canvas = config.layer.sceneCanvas,
+            context = canvas.context;
+
+        canvas.clear();
+        context.arc(config.x, config.y, 60, 0, Math.PI*2, false);
+        context.fillStyle = config.color;
+        context.fill();
+
+        if (config.selected) {
+          context.strokeStyle = 'black';
+          context.lineWidth = 6;
+          context.stroke();
+        }
+
+        if (config.hovered) {
+          context.strokeStyle = 'green';
+          context.lineWidth = 2;
+          context.stroke();
+        }
+      }
+
+      function drawHitCircle(config) {
+        var canvas = config.layer.hitCanvas,
+            context = canvas.context;
+
+        canvas.clear();
+        context.arc(config.x, config.y, 60, 0, Math.PI*2, false);
+        context.fillStyle = canvas.getColorFromKey(config.key);
+        context.fill();
+      }
+
+      function getCircleFromKey(key) {
+        var len = circles.length,
+            n, circle;
+
+        for (n=0; n<len; n++) {
+          circle = circles[n];
+          if (circle.key === key) {
+            return circle;
+          }
+        }
+
+        return null;
+      }
+
+      function getSelectedCircle() {
+        var len = circles.length,
+            n, circle;
+
+        for (n=0; n<len; n++) {
+          circle = circles[n];
+          if (circle.selected) {
+            return circle;
+          }
+        }
+
+        return null;  
+      }
+
+      function destroyCircle(key) {
+        var len = circles.length,
+            n, circle;
+
+        for (n=0; n<len; n++) {
+          circle = circles[n];
+          if (circle.key === key) {
+            circles.splice(n, 1);
+            drawSceneCircles();
+            drawHitCircles();
+            return true;
+          }
+        }
+
+        return false;
+      }
+
+      var candyContainer = document.getElementById('candyContainer');
+
+      // create wrapper
+      var wrapper = new Candy.Wrapper({
+        width: 400,
+        height: 200,
+        container: candyContainer
+      });
+
+      // create layers
+      var layer1 = new Candy.Layer();
+      var layer2 = new Candy.Layer();
+      var layer3 = new Candy.Layer();
+
+      // add layers
+      wrapper.add(layer1).add(layer2).add(layer3);
+
+      // create a scene graph (you don't need a scene graph for Candy, but in this
+      // example we will use one
+      var circles = [
+        {
+          x: wrapper.width/2,
+          y: wrapper.height*2/3,
+          hovered: false,
+          selected: true,
+          layer: layer1,
+          color: 'red',
+          key: 'red'
+        },
+        {
+          x: wrapper.width*2/5,
+          y: wrapper.height/3,
+          hovered: false,
+          selected: false,
+          layer: layer2,
+          color: 'yellow',
+          key: 'yellow'
+        },
+        {
+          x: wrapper.width*3/5,
+          y: wrapper.height/3,
+          hovered: false,
+          selected: false,
+          layer: layer3,
+          color: 'orange',
+          key: 'orange'
+        }
+      ];
+
+      // register keys for mouse detection
+      layer1.hitCanvas.registerKey('red');
+      layer2.hitCanvas.registerKey('yellow');
+      layer3.hitCanvas.registerKey('orange');
+
+      // draw circles onto hit canvases for mouse detection
+      drawHitCircles();
+
+      // draw visible circles
+      drawSceneCircles();
+
+      // add candy container handlers
+      candyContainer.addEventListener('mousemove', function(evt) {
+        var boundingRect = candyContainer.getBoundingClientRect(),
+            x = evt.clientX - boundingRect.left,
+            y = evt.clientY - boundingRect.top,
+            key = wrapper.getIntersection(x, y),
+            circle;
+
+        // unhover all circles
+        circles.forEach(function(circle) {
+          circle.hovered = false;
+        });
+        
+        if (key) {
+          circle = getCircleFromKey(key);
+          circle.hovered = true;
+        }
+
+        drawSceneCircles();
+      });
+
+      candyContainer.addEventListener('click', function(evt) {
+        var boundingRect = candyContainer.getBoundingClientRect(),
+            x = evt.clientX - boundingRect.left,
+            y = evt.clientY - boundingRect.top,
+            key = wrapper.getIntersection(x, y),
+            circle;
+
+        // unhover all circles
+        circles.forEach(function(circle) {
+          circle.selected = false;
+        });
+        
+        if (key) {
+          circle = getCircleFromKey(key);
+          circle.selected = true;
+        }
+
+        drawSceneCircles();
+      });
+
+      // add button handlers
+      document.getElementById('moveUp').addEventListener('click', function() {
+        var circle = getSelectedCircle();
+
+        if (circle) {
+          circle.layer.moveUp();
+        }
+      });
+
+      document.getElementById('moveDown').addEventListener('click', function() {
+        var circle = getSelectedCircle();
+
+        if (circle) {
+          circle.layer.moveDown();
+        }
+      });
+
+      document.getElementById('moveToTop').addEventListener('click', function() {
+        var circle = getSelectedCircle();
+
+        if (circle) {
+          circle.layer.moveToTop();
+        }
+      });
+
+      document.getElementById('moveToBottom').addEventListener('click', function() {
+        var circle = getSelectedCircle();
+
+        if (circle) {
+          circle.layer.moveToBottom();
+        }
+      });
+
+      document.getElementById('destroy').addEventListener('click', function() {
+        var circle = getSelectedCircle();
+
+        if (circle) {
+          circle.layer.destroy();
+        }
+      });
+    </script>
+  </body>
+</html>

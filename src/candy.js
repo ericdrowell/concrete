@@ -52,12 +52,14 @@
     /**
      * add layer
      * @param {Candy.Layer} layer
+     * @returns {Candy.Wrapper}
      */
     add: function(layer) {
       this.layers.push(layer);
       layer.setSize(layer.width || this.width, layer.height || this.height);
       layer.wrapper = this;
       this.container.appendChild(layer.container);
+      return this;
     },
     /**
      * set wrapper size
