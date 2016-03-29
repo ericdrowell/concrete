@@ -1,7 +1,7 @@
 /*
  * Candy v0.1.0
  * A sweet, fat free, HTML5 canvas library for all ages.
- * Release Date: 3-27-2016
+ * Release Date: 3-29-2016
  * https://github.com/ericdrowell/candy
  * Licensed under the MIT or GPL Version 2 licenses.
  *
@@ -79,12 +79,14 @@
     /**
      * add layer
      * @param {Candy.Layer} layer
+     * @returns {Candy.Wrapper}
      */
     add: function(layer) {
       this.layers.push(layer);
       layer.setSize(layer.width || this.width, layer.height || this.height);
       layer.wrapper = this;
       this.container.appendChild(layer.container);
+      return this;
     },
     /**
      * set wrapper size
