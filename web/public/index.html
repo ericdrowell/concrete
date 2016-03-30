@@ -70,7 +70,6 @@
             <li><a href="#hitCanvas-constructor">constructor</a></li>
             <li><a href="#hitCanvas-setSize">.setSize()</a></li>
             <li><a href="#hitCanvas-clear">.clear()</a></li>
-            <li><a href="#hitCanvas-registerKey">.registerKey()</a></li>
             <li><a href="#hitCanvas-getColorFromKey">.getColorFromKey()</a></li>
             <li><a href="#hitCanvas-getIntersection">.getIntersection()</a></li>
 
@@ -261,13 +260,9 @@ layer.destroy<span class="hljs-comment">()</span>;</code></pre>
 <pre><code class="javascript">hitCanvas.<span class="hljs-built_in">clear</span>();</code></pre>
             </li>
             <li>
-              <h3 id="hitCanvas-registerKey">.registerKey()</h3>         
-<pre><code class="javascript"><span class="hljs-comment">// register a key so that we can get a hit color later</span>
-hitCanvas.registerKey(<span class="hljs-string">'myKey'</span>)<span class="hljs-comment">;</span></code></pre>
-            </li>
-            <li>
-              <h3 id="sceneCanvas-getColorFromKey">.getColorFromKey()</h3>         
-<pre><code class="javascript">var <span class="hljs-keyword">color</span> = hitCanvas.getColorFromKey(<span class="hljs-string">'myKey'</span>)<span class="hljs-comment">;</span></code></pre>
+              <h3 id="hitCanvas-getColorFromKey">.getColorFromKey()</h3>         
+<pre><code class="javascript">// <span class="hljs-built_in">get</span> hit <span class="hljs-built_in">color</span> from <span class="hljs-built_in">key</span>.  This enables mouse detection when using getIntersection()
+<span class="hljs-built_in">var</span> <span class="hljs-built_in">color</span> = hitCanvas.getColorFromKey('myKey');</code></pre>
             </li>
             <li>
               <h3 id="hitCanvas-getIntersection">.getIntersection()</h3>         

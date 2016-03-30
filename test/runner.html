@@ -271,15 +271,13 @@
 
           concrete.add(layer);
 
-          layer.hitCanvas.registerKey(12345);
-
-          assert.equal(layer.hitCanvas.keyToColor[12345], 0);
-
           layer.sceneCanvas.context.fillStyle = 'red';
           layer.sceneCanvas.context.fillRect(0, 0, 50, 50);
 
           layer.hitCanvas.context.fillStyle = layer.hitCanvas.getColorFromKey(12345);
           layer.hitCanvas.context.fillRect(0, 0, 50, 50);
+
+          assert.equal(layer.hitCanvas.keyToColor[12345], 0);
 
           // in red rectangle
           assert.equal(layer.hitCanvas.getIntersection(0, 0), 12345);

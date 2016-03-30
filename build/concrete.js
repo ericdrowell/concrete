@@ -560,7 +560,11 @@
      * @returns {Integer}
      */
     getColorFromKey: function(key) {
-      var color = this.keyToColor[key].toString(16);
+      var color;
+
+      this.registerKey(key);
+
+      color = this.keyToColor[key].toString(16);
       // pad with zeros
       while (color.length < 6) {
         color = '0' + color;

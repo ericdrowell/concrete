@@ -70,7 +70,6 @@
             <li><a href="#hitCanvas-constructor">constructor</a></li>
             <li><a href="#hitCanvas-setSize">.setSize()</a></li>
             <li><a href="#hitCanvas-clear">.clear()</a></li>
-            <li><a href="#hitCanvas-registerKey">.registerKey()</a></li>
             <li><a href="#hitCanvas-getColorFromKey">.getColorFromKey()</a></li>
             <li><a href="#hitCanvas-getIntersection">.getIntersection()</a></li>
 
@@ -261,13 +260,9 @@ sceneCanvas.download({
 <pre><code class="javascript">hitCanvas.clear();</code></pre>
             </li>
             <li>
-              <h3 id="hitCanvas-registerKey">.registerKey()</h3>         
-<pre><code class="javascript">// register a key so that we can get a hit color later
-hitCanvas.registerKey('myKey');</code></pre>
-            </li>
-            <li>
-              <h3 id="sceneCanvas-getColorFromKey">.getColorFromKey()</h3>         
-<pre><code class="javascript">var color = hitCanvas.getColorFromKey('myKey');</code></pre>
+              <h3 id="hitCanvas-getColorFromKey">.getColorFromKey()</h3>         
+<pre><code class="javascript">// get hit color from key.  This enables mouse detection when using getIntersection()
+var color = hitCanvas.getColorFromKey('myKey');</code></pre>
             </li>
             <li>
               <h3 id="hitCanvas-getIntersection">.getIntersection()</h3>         
