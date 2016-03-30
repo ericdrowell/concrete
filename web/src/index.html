@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/vs.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css">
+    <link rel="stylesheet" href="main.css">
+  </head>
+  <body>
+    <div id="page">
+      <header>
+        <h1 id="logo"><a href="http://www.concretejs.com">Concrete.js</a></h1>
+        <div class="links">
+          <a href="https://raw.githubusercontent.com/ericdrowell/concrete/master/build/concrete-v0.1.0.min.js" target="_blank" class="cta">Download v0.1.0</a>
+        </div>
+      </header>
+      <ul id="navigation">
+        <li>
+          <h2>Getting Started</h2>
+          <ul>
+            <li><a href="#download">Download</a></li>
+            <li><a href="#why-concrete">Why Concrete</a></li>
+            <li><a href="#examples">Examples</a></li>
+          </ul>
+        </li>
+        <li>
+          <h2>Concrete</h2>
+          <ul>
+            <li><a href="#concrete-wrappers">.wrappers</a></li>
+          </ul>
+        </li>
+        <li>
+          <h2>Concrete.Wrapper</h2>
+          <ul>
+            <li><a href="#wrapper-constructor">constructor</a></li>
+            <li><a href="#wrapper-add">.add()</a></li>
+            <li><a href="#wrapper-setSize">.setSize()</a></li>
+            <li><a href="#wrapper-getIntersection">.getIntersection()</a></li>
+            <li><a href="#wrapper-toCanvas">.toCanvas()</a></li>
+            <li><a href="#wrapper-getIndex">.getIndex()</a></li>
+            <li><a href="#wrapper-destroy">.destroy()</a></li>
+          </ul>
+        </li>
+        <li>
+          <h2>Concrete.Layer</h2>
+          <ul>
+            <li><a href="#layer-constructor">constructor</a></li>
+            <li><a href="#layer-setPosition">.setPosition()</a></li>
+            <li><a href="#layer-setSize">.setSize()</a></li>
+            <li><a href="#layer-moveUp">.moveUp()</a></li>
+            <li><a href="#layer-moveDown">.moveDown()</a></li>
+            <li><a href="#layer-moveToTop">.moveToTop()</a></li>
+            <li><a href="#layer-moveToBottom">.moveToBottom()</a></li>
+            <li><a href="#layer-getIndex">.getIndex()</a></li>
+            <li><a href="#layer-destroy">.destroy</a></li>
+          </ul>
+        </li>
+        <li>
+          <h2>Concrete.SceneCanvas</h2>
+          <ul>
+            <li><a href="#sceneCanvas-constructor">constructor</a></li>
+            <li><a href="#sceneCanvas-setSize">.setSize()</a></li>
+            <li><a href="#sceneCanvas-clear">.clear()</a></li>
+            <li><a href="#sceneCanvas-toImage">.toImage()</a></li>
+            <li><a href="#sceneCanvas-download">.download()</a></li>
+          </ul>
+        </li>
+        <li>
+          <h2>Concrete.HitCanvas</h2>
+          <ul>
+            <li><a href="#hitCanvas-constructor">constructor</a></li>
+            <li><a href="#hitCanvas-setSize">.setSize()</a></li>
+            <li><a href="#hitCanvas-clear">.clear()</a></li>
+            <li><a href="#hitCanvas-registerKey">.registerKey()</a></li>
+            <li><a href="#hitCanvas-getColorFromKey">.getColorFromKey()</a></li>
+            <li><a href="#hitCanvas-getIntersection">.getIntersection()</a></li>
+
+          </ul>
+        </li>
+      </ul>
+
+
+
+
+
+
+      <ul id="content">
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <li>
+          <h2>Getting Started</h2>
+          <ul>
+            <li>
+              <h3 id="download">Download</h3>
+              <ul>
+                <li><a href="https://raw.githubusercontent.com/ericdrowell/concrete/master/build/concrete-v0.1.0.js" target="_blank">Github concrete-v0.1.0.js</a></li>
+                <li><a href="https://raw.githubusercontent.com/ericdrowell/concrete/master/build/concrete-v0.1.0.min.js" target="_blank">Github concrete-v0.1.0.min.js</a></li>
+              </ul>
+            </li>
+            <li>
+              <h3 id="why-concrete">Why Concrete</h3>
+              <p>
+                Concrete is a lightweight Html5 Canvas framework that enables hit detection, layer support, pixel ratio management, exports, and downloads.
+              </p>
+              <p>
+                As the creator of KineticJS, author of HTML5 Canvas Cookbook, founder of HTML5CanvasTutorials.com, founder of MeteorCharts, and the lead data visualization engineer at Platfora, I've identified a handful of features that just about every HTML5 Canvas project needs.  Concrete packages up these features into a lightweight framework of about 600 lines of JavaScript, including documentation.  
+              </p>
+            </li>
+            <li>
+              <h3 id="examples">Examples</h3>
+              <ul>
+                <li>Coming soon</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <li>
+          <h2>Concrete</h2>
+          <ul>
+            <li>
+              <h3 id="concrete-wrappers">.wrappers</h3> 
+<pre><code class="javascript">// get array of instantiated wrappers
+var wrappers = Concrete.wrappers;</code></pre>
+            </li>
+          </ul>
+        </li>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <li>
+          <h2>Concrete.Wrapper</h2>
+          <ul>
+            <li>
+              <h3 id="wrapper-constructor">constructor</h3>
+<pre><code class="javascript">var wrapper = new Concrete.Wrapper();</code></pre>
+            </li>
+            <li>
+              <h3 id="wrapper-add">.add()</h3>
+<pre><code class="javascript">// add layer to the wrapper
+wrapper.add(layer);</code></pre>
+            </li>
+            <li>
+              <h3 id="wrapper-setSize">.setSize()</h3>         
+<pre><code class="javascript">wrapper.setSize(600, 300);</code></pre>
+            </li>
+            <li>
+              <h3 id="wrapper-getIntersection">.getIntersection()</h3>         
+<pre><code class="javascript">var key = wrapper.getIntersection(20, 30);</code></pre>
+            </li>
+            <li>
+              <h3 id="wrapper-toCanvas">.toCanvas()</h3>         
+<pre><code class="javascript">// export to Concrete canvas (not a native canvas)
+var canvas = wrapper.toCanvas();
+
+// export to canvas using a specific pixel ratio
+var canvas = wrapper.toCanvas({
+  pixelRatio: 1
+});</code></pre>
+            </li>
+            <li>
+              <h3 id="wrapper-getIndex">.getIndex()</h3>         
+<pre><code class="javascript">var index = wrapper.getIndex();</code></pre>
+            </li>
+            <li>
+              <h3 id="wrapper-destroy">.destroy()</h3>         
+<pre><code class="javascript">// goodbye forever
+wrapper.destroy();</code></pre>
+            </li>
+          </ul>
+        </li>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <li>
+          <h2>Concrete.Layer</h2>
+          <ul>
+            <li>
+              <h3 id="layer-constructor">constructor</h3>         
+<pre><code class="javascript">var layer = new Candy.Layer();</code></pre>
+            </li>
+            <li>
+              <h3 id="layer-setPosition">.setPosition()</h3>         
+<pre><code class="javascript">layer.setPosition(50, 50);</code></pre>
+            </li>
+            <li>
+              <h3 id="layer-setSize">.setSize()</h3>         
+<pre><code class="javascript">layer.setSize(600, 200);</code></pre>
+            </li>
+            <li>
+              <h3 id="layer-moveUp">.moveUp()</h3>         
+<pre><code class="javascript">layer.moveUp();</code></pre>
+            </li>
+            <li>
+              <h3 id="layer-moveDown">.moveDown()</h3>         
+<pre><code class="javascript">layer.moveDown();</code></pre>
+            </li>
+            <li>
+              <h3 id="layer-moveToTop">.moveToTop()</h3>         
+<pre><code class="javascript">layer.moveToTop();</code></pre>
+            </li>
+            <li>
+              <h3 id="layer-moveToBottom">.moveToBottom()</h3>         
+<pre><code class="javascript">layer.moveToBottom();</code></pre>
+            </li>
+            <li>
+              <h3 id="layer-getIndex">.getIndex()</h3>         
+<pre><code class="javascript">var index = layer.getIndex();</code></pre>
+            </li>
+            <li>
+              <h3 id="layer-destroy">.destroy()</h3>         
+<pre><code class="javascript">// goodbye forever
+layer.destroy();</code></pre>
+            </li>
+          </ul>
+        </li>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <li>
+          <h2>Concrete.SceneCanvas</h2>
+          <ul>
+            <li>
+              <h3 id="sceneCanvas-constructor">constructor</h3>         
+<pre><code class="javascript">var sceneCanvas = new Candy.SceneCanvas();</code></pre>
+            </li>
+            <li>
+              <h3 id="sceneCanvas-setSize">.setSize()</h3>         
+<pre><code class="javascript">sceneCanvas.setSize(600, 200);</code></pre>
+            </li>
+            <li>
+              <h3 id="sceneCanvas-clear">.clear()</h3>         
+<pre><code class="javascript">sceneCanvas.clear();</code></pre>
+            </li>
+            <li>
+              <h3 id="sceneCanvas-toImage">.toImage()</h3>         
+<pre><code class="javascript">sceneCanvas.toImage(function(image) {
+  // do something with the image
+});</code></pre>
+            </li>
+            <li>
+              <h3 id="sceneCanvas-download">.download()</h3>         
+<pre><code class="javascript">// download the canvas as an image to your computer.  Cool!
+sceneCanvas.download({
+  fileName: 'my-file.png'
+});</code></pre>
+            </li>
+          </ul>
+        </li>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <li>
+          <h2>Concrete.HitCanvas</h2>
+          <ul>
+            <li>
+              <h3 id="hitCanvas-constructor">constructor</h3>         
+<pre><code class="javascript">var hitCanvas = new Candy.HitCanvas();</code></pre>
+            </li>
+            <li>
+              <h3 id="hitCanvas-setSize">.setSize()</h3>         
+<pre><code class="javascript">hitCanvas.setSize(600, 200);</code></pre>
+            </li>
+            <li>
+              <h3 id="hitCanvas-clear">.clear()</h3>         
+<pre><code class="javascript">hitCanvas.clear();</code></pre>
+            </li>
+            <li>
+              <h3 id="hitCanvas-registerKey">.registerKey()</h3>         
+<pre><code class="javascript">// register a key so that we can get a hit color later
+hitCanvas.registerKey('myKey');</code></pre>
+            </li>
+            <li>
+              <h3 id="sceneCanvas-getColorFromKey">.getColorFromKey()</h3>         
+<pre><code class="javascript">var color = hitCanvas.getColorFromKey('myKey');</code></pre>
+            </li>
+            <li>
+              <h3 id="hitCanvas-getIntersection">.getIntersection()</h3>         
+<pre><code class="javascript">var key = hitCanvas.getIntersection(20, 30);</code></pre>
+            </li>
+          </ul>
+        </li>
+
+      </ul>
+    </div>
+  </body>
+</html>

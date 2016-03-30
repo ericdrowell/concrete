@@ -1,0 +1,117 @@
+html, body, pre, code, h1, h2, h3, h4, ul, li {
+  margin: 0;
+  padding: 0; }
+
+html, body {
+  font-family: Calibri;
+  font-size: 14px; }
+
+h2, h3 {
+  padding-top: 80px;
+  margin-top: -80px; }
+
+ul {
+  list-style-type: none; }
+
+pre {
+  border: 4px solid #eee;
+  padding: 10px;
+  margin: 10px 0;
+  overflow: hidden; }
+  pre:before {
+    content: 'Example:';
+    font-family: 'calibri';
+    font-size: 18px;
+    color: #777;
+    display: block;
+    margin-bottom: 5px; }
+  pre code {
+    font-size: 14px; }
+
+header {
+  background-color: #333;
+  height: 75px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  display: inline-block; }
+  header #logo {
+    margin-left: 14px;
+    margin-top: 14px;
+    display: inline-block; }
+    header #logo a {
+      font-family: monospace;
+      color: white;
+      text-decoration: none;
+      font-weight: normal;
+      opacity: 0.8;
+      font-size: 40px;
+      transition: opacity 0.2s ease-in-out; }
+      header #logo a:hover {
+        opacity: 1; }
+  header .links {
+    display: inline-block;
+    float: right; }
+    header .links a {
+      float: right;
+      text-decoration: none;
+      color: white;
+      opacity: 0.7;
+      font-size: 24px;
+      border: 2px solid white;
+      padding: 8px;
+      font-family: Calibri;
+      margin-top: 13px;
+      margin-right: 13px;
+      transition: opacity 0.2s ease-in-out; }
+      header .links a:hover {
+        opacity: 1; }
+
+#navigation {
+  width: 350px;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding-top: 95px;
+  height: 100%;
+  overflow-y: scroll; }
+  #navigation > li {
+    margin-bottom: 10px; }
+  #navigation li {
+    margin-left: 20px; }
+    #navigation li a {
+      text-decoration: none;
+      font-size: 16px;
+      color: #444;
+      opacity: 0.7;
+      transition: opacity 0.2s ease-in-out; }
+      #navigation li a:hover {
+        opacity: 1; }
+
+#content {
+  margin-top: 75px;
+  width: 100%;
+  padding: 20px 20px 0 370px;
+  box-sizing: border-box; }
+  #content li {
+    margin-left: 20px; }
+  #content h2, #content h3 {
+    margin: 10px 0;
+    margin-top: -70px; }
+  #content h2 {
+    border-bottom: 3px solid #333; }
+  #content p {
+    font-family: Calibri;
+    font-size: 16px;
+    color: #777; }
+  #content a {
+    text-decoration: none;
+    font-family: Calibri;
+    font-size: 16px;
+    color: blue; }
+    #content a:hover {
+      text-decoration: underline; }

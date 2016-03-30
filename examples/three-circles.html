@@ -37,6 +37,8 @@
             context = canvas.context;
 
         canvas.clear();
+        context.save();
+        context.beginPath();
         context.arc(config.x, config.y, 60, 0, Math.PI*2, false);
         context.fillStyle = config.color;
         context.fill();
@@ -52,6 +54,7 @@
           context.lineWidth = 2;
           context.stroke();
         }
+        context.restore();
       }
 
       function drawHitCircle(config) {
@@ -59,9 +62,12 @@
             context = canvas.context;
 
         canvas.clear();
+        context.save();
+        context.beginPath();
         context.arc(config.x, config.y, 60, 0, Math.PI*2, false);
         context.fillStyle = canvas.getColorFromKey(config.key);
         context.fill();
+        context.restore();
       }
 
       function getCircleFromKey(key) {

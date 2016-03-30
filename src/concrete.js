@@ -75,35 +75,6 @@
       return this;
     },
     /**
-     * clear all layers
-     * @returns {Concrete.wrapper}
-     */
-    clear: function() {
-      this.clearScene();
-      this.clearHit();
-      return this;
-    },
-    /**
-     * clear all layer scene canvases
-     * @returns {Concrete.wrapper}
-     */
-    clearScene: function() {
-      this.layers.forEach(function(layer) {
-        layer.clearScene();
-      });
-      return this;
-    },
-    /**
-     * clear all layer hit canvases
-     * @returns {Concrete.wrapper}
-     */
-    clearHit: function() {
-      this.layers.forEach(function(layer) {
-        layer.clearHit();
-      });
-      return this;
-    },
-    /**
      * get key associated to coordinate.  This can be used for mouse interactivity.
      * @param {Number} x
      * @param {Number} y
@@ -244,15 +215,6 @@
       this.container.style.height = height + 'px';
       this.sceneCanvas.setSize(width, height);
       this.hitCanvas.setSize(width, height);
-      return this;
-    },
-    /**
-     * clear scene and hit canvases
-     * @returns {Concrete.Layer}
-     */
-    clear: function() {
-      this.sceneCanvas.clear();
-      this.hitCanvas.clear();
       return this;
     },
     /** 
@@ -439,8 +401,7 @@
     download: function(config) {
       var dataURL = this.canvas.toDataURL('image/png'),
           anchor = document.createElement('a'),
-          evObj = document.createEvent('Events'),
-          fileName;
+          fileName, evtObj;
 
       if (!config) {
         config = {};
@@ -451,11 +412,18 @@
 
       // set a attributes
       anchor.setAttribute('href', dataURL);
+      anchor.setAttribute('target', '_blank');
       anchor.setAttribute('download', fileName);
 
       // simulate click
-      evObj.initEvent('click', true, false);
-      anchor.dispatchEvent(evObj);
+      if (document.createEvent) {
+        evObj = document.createEvent('MouseEvents');
+        evObj.initEvent('click', true, true);
+        anchor.dispatchEvent(evObj);
+      }
+      else if (anchor.click) {
+        anchor.click();
+      }
     }
   };
 

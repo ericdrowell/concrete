@@ -1,7 +1,7 @@
 /*
  * Concrete v0.1.0
- * Concrete is a lightweight Html5 Canvas framework that supports canvas projects by enabling
- * hit detection, layer support, pixel ratio management, exports, and downloads
+ * A lightweight Html5 Canvas framework that enables hit detection, layer support, 
+ * pixel ratio management, exports, and downloads
  * Release Date: 3-29-2016
  * https://github.com/ericdrowell/candy
  * Licensed under the MIT or GPL Version 2 licenses.
@@ -100,35 +100,6 @@
       this.height = height;
       this.container.style.width = this.width + 'px';
       this.container.style.height = this.height + 'px';
-      return this;
-    },
-    /**
-     * clear all layers
-     * @returns {Concrete.wrapper}
-     */
-    clear: function() {
-      this.clearScene();
-      this.clearHit();
-      return this;
-    },
-    /**
-     * clear all layer scene canvases
-     * @returns {Concrete.wrapper}
-     */
-    clearScene: function() {
-      this.layers.forEach(function(layer) {
-        layer.clearScene();
-      });
-      return this;
-    },
-    /**
-     * clear all layer hit canvases
-     * @returns {Concrete.wrapper}
-     */
-    clearHit: function() {
-      this.layers.forEach(function(layer) {
-        layer.clearHit();
-      });
       return this;
     },
     /**
