@@ -497,11 +497,11 @@
     setSize: function(width, height) {
       this.width = width;
       this.height = height;
-
       this.canvas.width = width;
       this.canvas.style.width = width + 'px';
       this.canvas.height = height;
       this.canvas.style.height = height + 'px';
+      return this;
     },
     /** 
      * clear canvas
@@ -509,6 +509,7 @@
      */
     clear: function() {
       this.context.clearRect(0, 0, this.width, this.height);
+      return this;
     },
     /**
      * get key associated to coordinate.  This can be used for mouse interactivity.
