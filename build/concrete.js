@@ -445,9 +445,9 @@
 
       // simulate click
       if (document.createEvent) {
-        evObj = document.createEvent('MouseEvents');
-        evObj.initEvent('click', true, true);
-        anchor.dispatchEvent(evObj);
+        evtObj = document.createEvent('MouseEvents');
+        evtObj.initEvent('click', true, true);
+        anchor.dispatchEvent(evtObj);
       }
       else if (anchor.click) {
         anchor.click();

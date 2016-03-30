@@ -13,17 +13,17 @@ var date = new Date();
 var package = require('./package.json');
 
 gulp.task('clean-build', function () {
-  gulp.src('build/*')
+  return gulp.src('build/*')
     .pipe(clean());
 });
 
 gulp.task('clean-web-public', function () {
-  gulp.src('web/public/*')
+  return gulp.src('web/public/*')
     .pipe(clean());
 });
 
 gulp.task('hint', function() {
-  gulp.src('src/concrete.js')
+  return gulp.src('src/concrete.js')
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 });
@@ -54,7 +54,7 @@ gulp.task('license-prod', function() {
 });
 
 gulp.task('highlight', function () {
-  gulp.src('web/src/index.html')
+  return gulp.src('web/src/index.html')
     .pipe(highlight())
     .pipe(gulp.dest('web/public'));
 });
@@ -67,7 +67,7 @@ gulp.task('sass', function () {
 
 // ================================ main builds ================================
 
-gulp.task('lib', function() {
+gulp.task('build', function() {
   runSequence('clean-build', 'hint', 'build-license-dev', 'build-prod', 'license-prod');
 });
 
@@ -76,4 +76,4 @@ gulp.task('web', function() {
 });
 
 // Default Task
-gulp.task('default', ['lib', 'web']);
+gulp.task('default', ['build', 'web']);
