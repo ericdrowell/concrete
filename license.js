@@ -3,7 +3,7 @@
  * A lightweight Html5 Canvas framework that enables hit detection, layer support, 
  * pixel ratio management, exports, and downloads
  * Release Date: @@DATE
- * https://github.com/ericdrowell/candy
+ * https://github.com/ericdrowell/concrete
  * Licensed under the MIT or GPL Version 2 licenses.
  *
  * Copyright (C) @@YEAR Eric Rowell @ericdrowell
