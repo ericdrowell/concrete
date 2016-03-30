@@ -2,7 +2,7 @@
  * Concrete v0.1.0
  * A lightweight Html5 Canvas framework that enables hit detection, layer support, 
  * pixel ratio management, exports, and downloads
- * Release Date: 3-29-2016
+ * Release Date: 3-30-2016
  * https://github.com/ericdrowell/candy
  * Licensed under the MIT or GPL Version 2 licenses.
  *
@@ -245,15 +245,6 @@
       this.hitCanvas.setSize(width, height);
       return this;
     },
-    /**
-     * clear scene and hit canvases
-     * @returns {Concrete.Layer}
-     */
-    clear: function() {
-      this.sceneCanvas.clear();
-      this.hitCanvas.clear();
-      return this;
-    },
     /** 
      * move up
      * @returns {Concrete.Layer}
@@ -438,8 +429,7 @@
     download: function(config) {
       var dataURL = this.canvas.toDataURL('image/png'),
           anchor = document.createElement('a'),
-          evObj = document.createEvent('Events'),
-          fileName;
+          fileName, evtObj;
 
       if (!config) {
         config = {};
@@ -450,11 +440,18 @@
 
       // set a attributes
       anchor.setAttribute('href', dataURL);
+      anchor.setAttribute('target', '_blank');
       anchor.setAttribute('download', fileName);
 
       // simulate click
-      evObj.initEvent('click', true, false);
-      anchor.dispatchEvent(evObj);
+      if (document.createEvent) {
+        evObj = document.createEvent('MouseEvents');
+        evObj.initEvent('click', true, true);
+        anchor.dispatchEvent(evObj);
+      }
+      else if (anchor.click) {
+        anchor.click();
+      }
     }
   };
 
