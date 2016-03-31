@@ -44,6 +44,8 @@
           <h2>Concrete.Layer</h2>
           <ul>
             <li><a href="#layer-constructor">constructor</a></li>
+            <li><a href="#layer-sceneCanvas">.sceneCanvas</a></li>
+            <li><a href="#layer-hitCanvas">.hitCanvas</a></li>
             <li><a href="#layer-setPosition">.setPosition()</a></li>
             <li><a href="#layer-setSize">.setSize()</a></li>
             <li><a href="#layer-moveUp">.moveUp()</a></li>
@@ -51,13 +53,15 @@
             <li><a href="#layer-moveToTop">.moveToTop()</a></li>
             <li><a href="#layer-moveToBottom">.moveToBottom()</a></li>
             <li><a href="#layer-getIndex">.getIndex()</a></li>
-            <li><a href="#layer-destroy">.destroy</a></li>
+            <li><a href="#layer-destroy">.destroy()</a></li>
           </ul>
         </li>
         <li>
           <h2>Concrete.SceneCanvas</h2>
           <ul>
             <li><a href="#sceneCanvas-constructor">constructor</a></li>
+            <li><a href="#sceneCanvas-context">.context</a></li>
+            <li><a href="#sceneCanvas-canvas">.canvas</a></li>
             <li><a href="#sceneCanvas-setSize">.setSize()</a></li>
             <li><a href="#sceneCanvas-clear">.clear()</a></li>
             <li><a href="#sceneCanvas-toImage">.toImage()</a></li>
@@ -68,11 +72,12 @@
           <h2>Concrete.HitCanvas</h2>
           <ul>
             <li><a href="#hitCanvas-constructor">constructor</a></li>
+            <li><a href="#hitCanvas-context">.context</a></li>
+            <li><a href="#hitCanvas-canvas">.canvas</a></li>
             <li><a href="#hitCanvas-setSize">.setSize()</a></li>
             <li><a href="#hitCanvas-clear">.clear()</a></li>
             <li><a href="#hitCanvas-getColorFromKey">.getColorFromKey()</a></li>
             <li><a href="#hitCanvas-getIntersection">.getIntersection()</a></li>
-
           </ul>
         </li>
       </ul>
@@ -179,6 +184,18 @@ wrapper.destroy<span class="hljs-comment">()</span>;</code></pre>
 <pre><code class="javascript"><span class="hljs-keyword">var</span> layer = <span class="hljs-keyword">new</span> Candy.Layer();</code></pre>
             </li>
             <li>
+              <h3 id="layer-sceneCanvas">.sceneCanvas</h3>         
+<pre><code class="javascript"><span class="hljs-comment">// draw a rectangle on the scene canvas</span>
+layer.sceneCanvas.context.fillStyle = <span class="hljs-string">'red'</span><span class="hljs-comment">;</span>
+layer.sceneCanvas.context.fillRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">50</span>)<span class="hljs-comment">;</span></code></pre>
+            </li>
+            <li>
+              <h3 id="layer-hitCanvas">.hitCanvas</h3>         
+<pre><code class="javascript"><span class="hljs-comment">// draw a rectangle on the hit canvas for interactivity</span>
+layer.hitCanvas.context.fillStyle = layer.hitCanvas.getColorFromKey(<span class="hljs-string">'myKey'</span>)<span class="hljs-comment">;</span>
+layer.hitCanvas.context.fillRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">50</span>)<span class="hljs-comment">;</span></code></pre>
+            </li>
+            <li>
               <h3 id="layer-setPosition">.setPosition()</h3>         
 <pre><code class="javascript"><span class="hljs-selector-tag">layer</span><span class="hljs-selector-class">.setPosition</span>(50, 50);</code></pre>
             </li>
@@ -223,6 +240,16 @@ layer.destroy<span class="hljs-comment">()</span>;</code></pre>
 <pre><code class="javascript"><span class="hljs-keyword">var</span> sceneCanvas = <span class="hljs-keyword">new</span> Candy.SceneCanvas();</code></pre>
             </li>
             <li>
+              <h3 id="sceneCanvas-context">.context</h3>         
+<pre><code class="javascript">// <span class="hljs-built_in">get</span> canvas <span class="hljs-built_in">context</span>
+<span class="hljs-built_in">var</span> <span class="hljs-built_in">context</span> = sceneCanvas.<span class="hljs-built_in">context</span>;</code></pre>
+            </li>
+            <li>
+              <h3 id="sceneCanvas-canvas">.canvas</h3>         
+<pre><code class="javascript"><span class="hljs-comment">// get native canvas</span>
+<span class="hljs-variable"><span class="hljs-keyword">var</span> canvas</span> = sceneCanvas.canvas;</code></pre>
+            </li>
+            <li>
               <h3 id="sceneCanvas-setSize">.setSize()</h3>         
 <pre><code class="javascript"><span class="hljs-keyword">sceneCanvas.setSize(600, </span><span class="hljs-number">200</span>)<span class="hljs-comment">;</span></code></pre>
             </li>
@@ -253,6 +280,16 @@ layer.destroy<span class="hljs-comment">()</span>;</code></pre>
             <li>
               <h3 id="hitCanvas-constructor">constructor</h3>         
 <pre><code class="javascript"><span class="hljs-keyword">var</span> hitCanvas = <span class="hljs-keyword">new</span> Candy.HitCanvas();</code></pre>
+            </li>
+            <li>
+              <h3 id="hitCanvas-context">.context</h3>         
+<pre><code class="javascript">// <span class="hljs-built_in">get</span> canvas <span class="hljs-built_in">context</span>
+<span class="hljs-built_in">var</span> <span class="hljs-built_in">context</span> = hitCanvas.<span class="hljs-built_in">context</span>;</code></pre>
+            </li>
+            <li>
+              <h3 id="hitCanvas-canvas">.canvas</h3>         
+<pre><code class="javascript"><span class="hljs-comment">// get native canvas</span>
+<span class="hljs-variable"><span class="hljs-keyword">var</span> canvas</span> = hitCanvas.canvas;</code></pre>
             </li>
             <li>
               <h3 id="hitCanvas-setSize">.setSize()</h3>         
