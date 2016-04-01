@@ -49,7 +49,7 @@ header {
 
   #logo {
     margin-left: 14px;
-    margin-top: 14px;
+    margin-top: 5px;
     display: inline-block;
 
     a {
@@ -60,6 +60,16 @@ header {
       opacity: 0.8;
       font-size: 40px;
       transition: opacity 0.2s ease-in-out;
+      background-image: url("img/concrete-logo.png");
+      background-repeat: no-repeat;
+      background-size: 100px;
+      background-position-y: -10px;
+      height: 72px;
+      display: inline-block;
+      padding-left: 89px;
+      box-sizing: border-box;
+      padding-top: 10px;
+      text-shadow: -2px 0 0 #333;
 
       &:hover {
         opacity: 1;
@@ -183,5 +193,14 @@ header {
     &:hover {
       text-decoration: underline;
     }
+  }
+}
+
+#footer {
+  .grayscale {
+    width: 100%;
+    max-width: 1000px;
+    box-sizing: border-box;
+    opacity: 0.3;
   }
 }

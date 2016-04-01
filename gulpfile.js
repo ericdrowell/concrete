@@ -65,6 +65,11 @@ gulp.task('sass', function () {
     .pipe(gulp.dest('web/public'));
 });
 
+gulp.task('img', function () {
+  return gulp.src('web/img/PNG/*')
+    .pipe(gulp.dest('web/public/img'));
+});
+
 // ================================ main builds ================================
 
 gulp.task('build', function() {
@@ -72,7 +77,7 @@ gulp.task('build', function() {
 });
 
 gulp.task('web', function() {
-  runSequence('clean-web-public', 'highlight', 'sass');
+  runSequence('clean-web-public', 'highlight', 'sass', 'img');
 });
 
 // Default Task

@@ -2,3 +2,5 @@
 *.sublime-workspace
 .DS_Store
 /node_modules
+web/img/downloads
+web/img/PS
