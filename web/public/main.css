@@ -56,7 +56,7 @@ header {
       background-image: url("img/concrete-logo.png");
       background-repeat: no-repeat;
       background-size: 100px;
-      background-position-y: -10px;
+      background-position-y: -13px;
       height: 72px;
       display: inline-block;
       padding-left: 105px;
@@ -155,6 +155,9 @@ header {
   #navigation {
     display: none; }
   #content {
-    padding-left: 0; }
-  header .links {
-    display: none; } }
+    padding-left: 0;
+    margin-top: 0; }
+  header {
+    position: relative; }
+    header .links {
+      display: none; } }
