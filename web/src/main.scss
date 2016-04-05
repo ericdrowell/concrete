@@ -4,8 +4,13 @@ html, body, pre, code, h1, h2, h3, h4, ul, li {
 }
 
 html, body {
-  font-family: Calibri;
+  font-family: 'Open Sans', sans-serif;
   font-size: 14px;
+}
+
+body {
+  min-width: 400px;
+  overflow-x: hidden;
 }
 
 h2, h3 {
@@ -24,8 +29,8 @@ pre {
   overflow: hidden;
 
   &:before {
+    font-family: 'Open Sans', sans-serif;
     content: 'Example:';
-    font-family: 'calibri';
     font-size: 18px;
     color: #777;
     display: block;
@@ -66,69 +71,68 @@ header {
       background-position-y: -10px;
       height: 72px;
       display: inline-block;
-      padding-left: 89px;
+      padding-left: 105px;
       box-sizing: border-box;
       padding-top: 10px;
-      text-shadow: -2px 0 0 #333;
 
       &:hover {
         opacity: 1;
       }
     }
-  }
-
-  .github {
-    color: white;
-    font-size: 40px;
-    opacity: 0.7;
-    text-decoration: none;
-    transition: opacity 0.2s ease-in-out;
-    float: right;
-    margin: 14px 20px 0 0;
-
-    .text {
-      margin-left: -99999px;
-    }
-
-    &:hover {
-      opacity: 1;
-    }
-  }
-
-  .twitter-follow-button {
-    float: right;
-    margin-top: 24px;
-    text-decoration: none;
-    margin-right: 20px;
-    color: #333;
   }
 
   .links {
     display: inline-block;
     float: right;
 
-    a {
+    .download {
       float: right;
       text-decoration: none;
       color: white;
       opacity: 0.7;
-      font-size: 24px;
+      font-size: 18px;
       border: 2px solid white;
-      padding: 8px;
-      font-family: Calibri;
-      margin-top: 13px;
-      margin-right: 13px;
+      padding: 2px 10px 2px 10px;
+      margin-top: 21px;
+      margin-right: 18px;
       transition: opacity 0.2s ease-in-out;
+      border-radius: 5px;
 
       &:hover {
         opacity: 1;
       }
     }  
+
+    .github {
+      color: white;
+      font-size: 40px;
+      opacity: 0.7;
+      text-decoration: none;
+      transition: opacity 0.2s ease-in-out;
+      float: right;
+      margin: 7px 20px 0 0;
+
+      .text {
+        margin-left: -99999px;
+      }
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .twitter-follow-button {
+      float: right;
+      margin-top: 24px;
+      text-decoration: none;
+      margin-right: 20px;
+      color: #333;
+    }
   }
 }
 
 #navigation {
-  width: 350px;
+  width: 270px;
   box-sizing: border-box;
   background-color: #f5f5f5;
   position: fixed;
@@ -162,7 +166,7 @@ header {
 #content {
   margin-top: 75px;
   width: 100%;
-  padding: 20px 20px 0 370px;
+  padding: 20px 20px 0 290px;
   box-sizing: border-box;
 
   li {
@@ -179,14 +183,12 @@ header {
   }
 
   p {
-    font-family: Calibri;
     font-size: 16px;
     color: #777;
   }
 
   a {
     text-decoration: none;
-    font-family: Calibri;
     font-size: 16px;
     color: blue;
 
@@ -202,5 +204,19 @@ header {
     max-width: 1000px;
     box-sizing: border-box;
     opacity: 0.3;
+  }
+}
+
+@media only screen and (max-width: 880px)  {
+  #navigation {
+    display: none;
+  }
+
+  #content {
+    padding-left: 0;
+  }
+
+  header .links {
+    display: none;
   }
 }
