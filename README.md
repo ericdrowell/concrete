@@ -6,3 +6,9 @@ As the creator of KineticJS, author of HTML5 Canvas Cookbook, founder of HTML5Ca
 # Examples & Documentation
 
 Head on over to the main website http://www.concretejs.com.
+
+# TODOs
+
+* layer hide / show
+* hit canvas should be position absolute
+* caching
