@@ -33,10 +33,10 @@
       }
 
       function drawSceneCircle(config) {
-        var canvas = config.layer.sceneCanvas,
-            context = canvas.context;
+        var scene = config.layer.scene,
+            context = scene.context;
 
-        canvas.clear();
+        scene.clear();
         context.save();
         context.beginPath();
         context.arc(config.x, config.y, 60, 0, Math.PI*2, false);
@@ -58,14 +58,14 @@
       }
 
       function drawHitCircle(config) {
-        var canvas = config.layer.hitCanvas,
-            context = canvas.context;
+        var hit = config.layer.hit,
+            context = hit.context;
 
-        canvas.clear();
+        hit.clear();
         context.save();
         context.beginPath();
         context.arc(config.x, config.y, 60, 0, Math.PI*2, false);
-        context.fillStyle = canvas.getColorFromKey(config.key);
+        context.fillStyle = hit.getColorFromKey(config.key);
         context.fill();
         context.restore();
       }
@@ -117,8 +117,8 @@
 
       var concreteContainer = document.getElementById('concreteContainer');
 
-      // create wrapper
-      var wrapper = new Concrete.Wrapper({
+      // create viewport
+      var viewport = new Concrete.Viewport({
         width: 400,
         height: 200,
         container: concreteContainer
@@ -130,14 +130,14 @@
       var layer3 = new Concrete.Layer();
 
       // add layers
-      wrapper.add(layer1).add(layer2).add(layer3);
+      viewport.add(layer1).add(layer2).add(layer3);
 
       // create a scene graph (you don't need a scene graph for Concrete, but in this
       // example we will use one
       var circles = [
         {
-          x: wrapper.width/2,
-          y: wrapper.height*2/3,
+          x: viewport.width/2,
+          y: viewport.height*2/3,
           hovered: false,
           selected: true,
           layer: layer1,
@@ -145,8 +145,8 @@
           key: 'red'
         },
         {
-          x: wrapper.width*2/5,
-          y: wrapper.height/3,
+          x: viewport.width*2/5,
+          y: viewport.height/3,
           hovered: false,
           selected: false,
           layer: layer2,
@@ -154,8 +154,8 @@
           key: 'yellow'
         },
         {
-          x: wrapper.width*3/5,
-          y: wrapper.height/3,
+          x: viewport.width*3/5,
+          y: viewport.height/3,
           hovered: false,
           selected: false,
           layer: layer3,
@@ -165,9 +165,9 @@
       ];
 
       // register keys for mouse detection
-      layer1.hitCanvas.registerKey('red');
-      layer2.hitCanvas.registerKey('yellow');
-      layer3.hitCanvas.registerKey('orange');
+      layer1.hit.registerKey('red');
+      layer2.hit.registerKey('yellow');
+      layer3.hit.registerKey('orange');
 
       // draw circles onto hit canvases for mouse detection
       drawHitCircles();
@@ -180,7 +180,7 @@
         var boundingRect = concreteContainer.getBoundingClientRect(),
             x = evt.clientX - boundingRect.left,
             y = evt.clientY - boundingRect.top,
-            key = wrapper.getIntersection(x, y),
+            key = viewport.getIntersection(x, y),
             circle;
 
         // unhover all circles
@@ -200,7 +200,7 @@
         var boundingRect = concreteContainer.getBoundingClientRect(),
             x = evt.clientX - boundingRect.left,
             y = evt.clientY - boundingRect.top,
-            key = wrapper.getIntersection(x, y),
+            key = viewport.getIntersection(x, y),
             circle;
 
         // unhover all circles
@@ -258,7 +258,7 @@
       });
 
       document.getElementById('download').addEventListener('click', function() {
-        wrapper.toCanvas().download({
+        viewport.toScene().download({
           fileName: 'three-circles.png'
         });
       });

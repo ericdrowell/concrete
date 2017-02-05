@@ -13,17 +13,17 @@
     }
   })();
 
-  Concrete.wrappers = [];
+  Concrete.viewports = [];
 
-  ////////////////////////////////////////////////////////////// WRAPPER //////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////// VIEWPORT //////////////////////////////////////////////////////////////
   
   /**
-   * Concrete Wrapper constructor
+   * Concrete Viewport constructor
    * @param {Object} config
-   * @param {Integer} config.width - wrapper width in pixels
-   * @param {Integer} config.height - wrapper height in pixels
+   * @param {Integer} config.width - viewport width in pixels
+   * @param {Integer} config.height - viewport height in pixels
    */
-  Concrete.Wrapper = function(config) {
+  Concrete.Viewport = function(config) {
     if (!config) {
       config = {};
     }
@@ -45,27 +45,27 @@
     config.container.innerHTML = '';
     config.container.appendChild(this.container);
 
-    Concrete.wrappers.push(this);
+    Concrete.viewports.push(this);
   };
 
-  Concrete.Wrapper.prototype = {
+  Concrete.Viewport.prototype = {
     /**
      * add layer
      * @param {Concrete.Layer} layer
-     * @returns {Concrete.Wrapper}
+     * @returns {Concrete.Viewport}
      */
     add: function(layer) {
       this.layers.push(layer);
       layer.setSize(layer.width || this.width, layer.height || this.height);
-      layer.wrapper = this;
+      layer.viewport = this;
       this.container.appendChild(layer.container);
       return this;
     },
     /**
-     * set wrapper size
-     * @param {Integer} width - wrapper width in pixels
-     * @param {Integer} height - wrapper height in pixels
-     * @returns {Concrete.Wrapper}
+     * set viewport size
+     * @param {Integer} width - viewport width in pixels
+     * @param {Integer} height - viewport height in pixels
+     * @returns {Concrete.Viewport}
      */
     setSize: function(width, height) {
       this.width = width;
@@ -87,7 +87,7 @@
 
       for (n=len-1; n>=0; n--) {
         layer = layers[n];
-        key = layer.hitCanvas.getIntersection(x, y);
+        key = layer.hit.getIntersection(x, y);
         if (key !== null) {
           return key;
         }
@@ -96,40 +96,40 @@
       return null;
     },
     /** 
-     * convert wrapper into a Concrete canvas
+     * convert viewport into a Concrete scene
      * @param {Object} config
      * @param {Number} config.pixelRatio - typically 1 or 2
-     * @returns {Concrete.Canvas}
+     * @returns {Concrete.Scene}
      */
-    toCanvas: function(config) {
+    toScene: function(config) {
       if (!config) {
         config = {};
       }
-      var canvas = new Concrete.SceneCanvas({
+      var scene = new Concrete.Scene({
         pixelRatio: config.pixelRatio,
         width: this.width,
         height: this.height
       });
 
       this.layers.forEach(function(layer) {
-        canvas.context.drawImage(layer.sceneCanvas.canvas, 0, 0, layer.width, layer.height);
+        scene.context.drawImage(layer.scene.canvas, 0, 0, layer.width, layer.height);
       });
 
-      return canvas;
+      return scene;
     },
     /** 
-     * get wrapper index from all Concrete wrappers
+     * get viewport index from all Concrete viewports
      * @returns {Integer}
      */
     getIndex: function() {
-      var wrappers = Concrete.wrappers,
-          len = wrappers.length,
+      var viewports = Concrete.viewports,
+          len = viewports.length,
           n = 0,
-          wrapper;
+          viewport;
 
       for (n=0; n<len; n++) {
-        wrapper = wrappers[n];
-        if (this.id === wrapper.id) {
+        viewport = viewports[n];
+        if (this.id === viewport.id) {
           return n;
         }
       }
@@ -137,7 +137,7 @@
       return null;
     },
     /**
-     * destroy wrapper
+     * destroy viewport
      */
     destroy: function() {
       // destroy layers
@@ -145,8 +145,8 @@
         layer.destroy();
       });
 
-      // remove self from wrappers array
-      Concrete.wrappers.splice(this.getIndex(), 1);
+      // remove self from viewports array
+      Concrete.viewports.splice(this.getIndex(), 1);
     }
   };
 
@@ -157,8 +157,8 @@
    * @param {Object} config
    * @param {Integer} [config.x]
    * @param {Integer} [config.y]
-   * @param {Integer} [config.width] - wrapper width in pixels
-   * @param {Integer} [config.height] - wrapper height in pixels
+   * @param {Integer} [config.width] - viewport width in pixels
+   * @param {Integer} [config.height] - viewport height in pixels
    */
   Concrete.Layer = function(config) {
     if (!config) {
@@ -170,15 +170,15 @@
     this.height = 0;
 
     this.id = idCounter++;
-    this.hitCanvas = new Concrete.HitCanvas();
-    this.sceneCanvas = new Concrete.SceneCanvas();
+    this.hit = new Concrete.Hit();
+    this.scene = new Concrete.Scene();
 
     this.container = document.createElement('div');
     this.container.className = 'concrete-layer';
     this.container.style.display = 'inline-block';
     this.container.style.position = 'absolute';
-    this.container.appendChild(this.hitCanvas.canvas);
-    this.container.appendChild(this.sceneCanvas.canvas);
+    this.container.appendChild(this.hit.canvas);
+    this.container.appendChild(this.scene.canvas);
 
     if (config.x && config.y) {
       this.setPosition(config.x, config.y);
@@ -213,8 +213,8 @@
       this.container.style.width = width + 'px';
       this.height = height;
       this.container.style.height = height + 'px';
-      this.sceneCanvas.setSize(width, height);
-      this.hitCanvas.setSize(width, height);
+      this.scene.setSize(width, height);
+      this.hit.setSize(width, height);
       return this;
     },
     /** 
@@ -223,15 +223,15 @@
      */
     moveUp: function() {
       var index = this.getIndex(),
-          wrapper = this.wrapper,
-          layers = wrapper.layers;
+          viewport = this.viewport,
+          layers = viewport.layers;
 
       if (index < layers.length - 1) {
         // swap
         layers[index] = layers[index+1];
         layers[index+1] = this;
 
-        wrapper.container.insertBefore(this.container, wrapper.container.children[index+2]);
+        viewport.container.insertBefore(this.container, viewport.container.children[index+2]);
       }
 
       return this;
@@ -242,15 +242,15 @@
      */
     moveDown: function() {
       var index = this.getIndex(),
-          wrapper = this.wrapper,
-          layers = wrapper.layers;
+          viewport = this.viewport,
+          layers = viewport.layers;
 
       if (index > 0) {
         // swap
         layers[index] = layers[index-1];
         layers[index-1] = this;
 
-        wrapper.container.insertBefore(this.container, wrapper.container.children[index-1]);
+        viewport.container.insertBefore(this.container, viewport.container.children[index-1]);
       }
 
       return this;
@@ -261,13 +261,13 @@
      */
     moveToTop: function() {
       var index = this.getIndex(),
-          wrapper = this.wrapper,
-          layers = wrapper.layers;
+          viewport = this.viewport,
+          layers = viewport.layers;
 
       layers.splice(index, 1);
       layers.push(this);
 
-      wrapper.container.appendChild(this.container);
+      viewport.container.appendChild(this.container);
     },
     /** 
      * move to bottom
@@ -275,22 +275,22 @@
      */
     moveToBottom: function() {
       var index = this.getIndex(),
-          wrapper = this.wrapper,
-          layers = wrapper.layers;
+          viewport = this.viewport,
+          layers = viewport.layers;
 
       layers.splice(index, 1);
       layers.unshift(this);
 
-      wrapper.container.insertBefore(this.container, wrapper.container.firstChild);
+      viewport.container.insertBefore(this.container, viewport.container.firstChild);
 
       return this;
     },
     /** 
-     * get layer index from wrapper layers
+     * get layer index from viewport layers
      * @returns {Number|null}
      */
     getIndex: function() {
-      var layers = this.wrapper.layers,
+      var layers = this.viewport.layers,
           len = layers.length,
           n = 0,
           layer;
@@ -309,23 +309,23 @@
      */
     destroy: function() {
       // remove self from layers array
-      this.wrapper.layers.splice(this.getIndex(), 1);
+      this.viewport.layers.splice(this.getIndex(), 1);
 
       // remove self from dom
-      this.wrapper.container.removeChild(this.container);
+      this.viewport.container.removeChild(this.container);
     }
   };
 
-  ////////////////////////////////////////////////////////////// SCENE CANVAS //////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////// SCENE //////////////////////////////////////////////////////////////
   
   /**
-   * Concrete SceneCanvas constructor
+   * Concrete Scene constructor
    * @param {Object} config
    * @param {Integer} [config.width] - canvas width in pixels
    * @param {Integer} [config.height] - canvas height in pixels
    * @param {Number} [config.pixelRatio] - typically 1 or 2
    */
-  Concrete.SceneCanvas = function(config) {
+  Concrete.Scene = function(config) {
     if (!config) {
       config = {};
     }
@@ -346,12 +346,12 @@
     }
   };
 
-  Concrete.SceneCanvas.prototype = {
+  Concrete.Scene.prototype = {
     /**
-     * set canvas size
+     * set scene size
      * @param {Number} width
      * @param {Number} height
-     * @returns {Concrete.SceneCanvas}
+     * @returns {Concrete.Scene}
      */
     setSize: function(width, height) {
       this.width = width;
@@ -370,15 +370,15 @@
       return this;
     },
     /** 
-     * clear canvas
-     * @returns {Concrete.SceneCanvas}
+     * clear scene
+     * @returns {Concrete.Scene}
      */
     clear: function() {
       this.context.clearRect(0, 0, this.width * this.pixelRatio, this.height * this.pixelRatio);
       return this;
     },
     /** 
-     * convert canvas into an image
+     * convert scene into an image
      * @param {Function} callback
      */
     toImage: function(callback) {
@@ -394,7 +394,7 @@
       imageObj.src = dataURL;
     },
     /** 
-     * download canvas as an image
+     * download scene as an image
      * @param {Object} config
      * @param {String} config.fileName
      */
@@ -427,16 +427,16 @@
     }
   };
 
-  ////////////////////////////////////////////////////////////// HIT CANVAS //////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////// HIT //////////////////////////////////////////////////////////////
   
   /**
-   * Concrete HitCanvas constructor
+   * Concrete Hit constructor
    * @param {Object} config
    * @param {Integer} [config.width] - canvas width in pixels
    * @param {Integer} [config.height] - canvas height in pixels
    * @param {Number} [config.pixelRatio] - typically 1 or 2
    */
-  Concrete.HitCanvas = function(config) {
+  Concrete.Hit = function(config) {
     if (!config) {
       config = {};
     }
@@ -459,12 +459,12 @@
     }
   };
 
-  Concrete.HitCanvas.prototype = {
+  Concrete.Hit.prototype = {
     /**
-     * set canvas size
+     * set hit size
      * @param {Number} width
      * @param {Number} height
-     * @returns {Concrete.HitCanvas}
+     * @returns {Concrete.Hit}
      */
     setSize: function(width, height) {
       this.width = width;
@@ -476,8 +476,8 @@
       return this;
     },
     /** 
-     * clear canvas
-     * @returns {Concrete.HitCanvas}
+     * clear hit
+     * @returns {Concrete.Hit}
      */
     clear: function() {
       this.context.clearRect(0, 0, this.width, this.height);
@@ -505,7 +505,7 @@
     },
     /**
      * register key for hit detection
-     * @returns {Concrete.HitCanvas)
+     * @returns {Concrete.Hit)
      */
     registerKey: function(key) {
       var color;

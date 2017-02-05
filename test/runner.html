@@ -4,7 +4,7 @@
     <title>Concrete Mocha Tests</title>
     <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
     <style>
-      #concreteContainer {
+      #viewportContainer {
         display: inline-block;
         border: 2px solid #ccc;
         margin-left: 10px;
@@ -20,7 +20,7 @@
   </head>  
   <body>  
     <h1>Concrete Tests</h1>
-    <div id="concreteContainer"></div>
+    <div id="viewportContainer"></div>
     <div id="imageContainer"></div>
     <div id="mocha"></div>
 
@@ -29,33 +29,33 @@
     <script src="../src/concrete.js"></script>
     <script>
         var assert = chai.assert,
-            concreteContainer = document.getElementById('concreteContainer');
+            viewportContainer = document.getElementById('viewportContainer');
 
         mocha.setup('tdd');
 
-        test('instantiate Concrete.Wrapper', function(){
-          var concrete = new Concrete.Wrapper({
+        test('instantiate Concrete.Viewport', function(){
+          var viewport = new Concrete.Viewport({
             width: 500,
             height: 200,
-            container: concreteContainer
+            container: viewportContainer
           });
 
-          assert.equal(concrete.width, 500);
-          assert.equal(concrete.height, 200);
-          assert.ok(concrete.container);
+          assert.equal(viewport.width, 500);
+          assert.equal(viewport.height, 200);
+          assert.ok(viewport.container);
         });
 
-        test('canvas toImage', function(done){
-          var canvas = new Concrete.SceneCanvas({
+        test('scene toImage', function(done){
+          var scene = new Concrete.Scene({
             width: 500,
             height: 200
           });
 
-          canvas.context.beginPath();
-          canvas.context.fillStyle = 'red';
-          canvas.context.fillRect(0, 0, 50, 50);
+          scene.context.beginPath();
+          scene.context.fillStyle = 'red';
+          scene.context.fillRect(0, 0, 50, 50);
 
-          canvas.toImage(function(image) {
+          scene.toImage(function(image) {
             imageContainer.innerHTML = '';
             imageContainer.appendChild(image);
             assert.equal(image.width, 500);
@@ -67,91 +67,91 @@
         test('instantiate Concrete.Layer', function(){
           var layer = new Concrete.Layer();
 
-          assert.ok(layer.sceneCanvas);
-          assert.ok(layer.hitCanvas);
+          assert.ok(layer.scene);
+          assert.ok(layer.hit);
         });
 
         test('add layer', function(){
-          var concrete = new Concrete.Wrapper({
+          var viewport = new Concrete.Viewport({
             width: 500,
             height: 200,
-            container: concreteContainer
+            container: viewportContainer
           });
 
           var layer = new Concrete.Layer();
 
-          assert.equal(concrete.layers.length, 0);
+          assert.equal(viewport.layers.length, 0);
 
-          concrete.add(layer);
+          viewport.add(layer);
 
-          assert.equal(concrete.layers.length, 1);
+          assert.equal(viewport.layers.length, 1);
           assert.equal(layer.width, 500);
           assert.equal(layer.height, 200);
         });
 
         test('draw, clear, draw onto canvas', function(){
-          var concrete = new Concrete.Wrapper({
+          var viewport = new Concrete.Viewport({
             width: 500,
             height: 200,
-            container: concreteContainer
+            container: viewportContainer
           });
 
           var layer = new Concrete.Layer();
 
-          concrete.add(layer);
+          viewport.add(layer);
 
-          layer.sceneCanvas.context.beginPath();
-          layer.sceneCanvas.context.fillStyle = 'red';
-          layer.sceneCanvas.context.fillRect(0, 0, 50, 50);
+          layer.scene.context.beginPath();
+          layer.scene.context.fillStyle = 'red';
+          layer.scene.context.fillRect(0, 0, 50, 50);
 
-          layer.sceneCanvas.clear();
+          layer.scene.clear();
 
-          layer.sceneCanvas.context.beginPath();
-          layer.sceneCanvas.context.fillStyle = 'blue';
-          layer.sceneCanvas.context.fillRect(50, 0, 50, 50);
+          layer.scene.context.beginPath();
+          layer.scene.context.fillStyle = 'blue';
+          layer.scene.context.fillRect(50, 0, 50, 50);
 
           assert.ok(true);
         });
 
         test('three layers', function(){
-          var concrete = new Concrete.Wrapper({
+          var viewport = new Concrete.Viewport({
             width: 500,
             height: 200,
-            container: concreteContainer
+            container: viewportContainer
           });
 
           var layer1 = new Concrete.Layer();
           var layer2 = new Concrete.Layer();
           var layer3 = new Concrete.Layer();
 
-          concrete.add(layer1);
-          concrete.add(layer2);
-          concrete.add(layer3);
+          viewport.add(layer1);
+          viewport.add(layer2);
+          viewport.add(layer3);
 
-          layer1.sceneCanvas.context.fillStyle = 'red';
-          layer1.sceneCanvas.context.fillRect(0, 0, 50, 50); 
+          layer1.scene.context.fillStyle = 'red';
+          layer1.scene.context.fillRect(0, 0, 50, 50); 
 
-          layer2.sceneCanvas.context.fillStyle = 'yellow';
-          layer2.sceneCanvas.context.fillRect(50, 0, 50, 50); 
+          layer2.scene.context.fillStyle = 'yellow';
+          layer2.scene.context.fillRect(50, 0, 50, 50); 
 
-          layer3.sceneCanvas.context.fillStyle = 'blue';
-          layer3.sceneCanvas.context.fillRect(100, 0, 50, 50); 
+          layer3.scene.context.fillStyle = 'blue';
+          layer3.scene.context.fillRect(100, 0, 50, 50); 
         });
 
         test('layer getIndex()', function(){
-          var concrete = new Concrete.Wrapper({
+          var viewport = new Concrete.Viewport({
             width: 500,
             height: 200,
-            container: concreteContainer
+            container: viewportContainer
           });
 
           var layer1 = new Concrete.Layer();
           var layer2 = new Concrete.Layer();
           var layer3 = new Concrete.Layer();
 
-          concrete.add(layer1);
-          concrete.add(layer2);
-          concrete.add(layer3);
+          viewport.add(layer1);
+          viewport.add(layer2);
+          viewport.add(layer3);
 
           assert.equal(layer1.getIndex(), 0);
           assert.equal(layer2.getIndex(), 1);
@@ -159,10 +159,10 @@
         });
 
         test('layer moveToTop()', function(){
-          var concrete = new Concrete.Wrapper({
+          var viewport = new Concrete.Viewport({
             width: 500,
             height: 200,
-            container: concreteContainer
+            container: viewportContainer
           });
 
           var layer1 = new Concrete.Layer();
@@ -173,47 +173,47 @@
           layer2.container.id = 'layer2';
           layer3.container.id = 'layer3';
 
-          concrete.add(layer1);
-          concrete.add(layer2);
-          concrete.add(layer3);
+          viewport.add(layer1);
+          viewport.add(layer2);
+          viewport.add(layer3);
 
-          layer1.sceneCanvas.context.fillStyle = 'red';
-          layer1.sceneCanvas.context.fillRect(0, 0, 50, 50); 
+          layer1.scene.context.fillStyle = 'red';
+          layer1.scene.context.fillRect(0, 0, 50, 50); 
 
-          layer2.sceneCanvas.context.fillStyle = 'yellow';
-          layer2.sceneCanvas.context.fillRect(50, 0, 50, 50); 
+          layer2.scene.context.fillStyle = 'yellow';
+          layer2.scene.context.fillRect(50, 0, 50, 50); 
 
-          layer3.sceneCanvas.context.fillStyle = 'blue';
-          layer3.sceneCanvas.context.fillRect(100, 0, 50, 50); 
+          layer3.scene.context.fillStyle = 'blue';
+          layer3.scene.context.fillRect(100, 0, 50, 50); 
 
-          // check concrete.layers order
-          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer1');
-          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer2');
-          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer3');
+          // check viewport.layers order
+          assert.equal(viewport.layers[0].container.getAttribute('id'), 'layer1');
+          assert.equal(viewport.layers[1].container.getAttribute('id'), 'layer2');
+          assert.equal(viewport.layers[2].container.getAttribute('id'), 'layer3');
 
           // check dom order
-          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer1');
-          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer2');
-          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer3');
+          assert.equal(viewport.container.children[0].getAttribute('id'), 'layer1');
+          assert.equal(viewport.container.children[1].getAttribute('id'), 'layer2');
+          assert.equal(viewport.container.children[2].getAttribute('id'), 'layer3');
 
           layer1.moveToTop();
 
-          // check concrete.layers order
-          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer2');
-          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer3');
-          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer1');
+          // check viewport.layers order
+          assert.equal(viewport.layers[0].container.getAttribute('id'), 'layer2');
+          assert.equal(viewport.layers[1].container.getAttribute('id'), 'layer3');
+          assert.equal(viewport.layers[2].container.getAttribute('id'), 'layer1');
 
           // check dom order
-          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer2');
-          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer3');
-          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer1');
+          assert.equal(viewport.container.children[0].getAttribute('id'), 'layer2');
+          assert.equal(viewport.container.children[1].getAttribute('id'), 'layer3');
+          assert.equal(viewport.container.children[2].getAttribute('id'), 'layer1');
         });
 
         test('layer moveToBottom()', function(){
-          var concrete = new Concrete.Wrapper({
+          var viewport = new Concrete.Viewport({
             width: 500,
             height: 200,
-            container: concreteContainer
+            container: viewportContainer
           });
 
           var layer1 = new Concrete.Layer();
@@ -224,83 +224,83 @@
           layer2.container.id = 'layer2';
           layer3.container.id = 'layer3';
 
-          concrete.add(layer1);
-          concrete.add(layer2);
-          concrete.add(layer3);
+          viewport.add(layer1);
+          viewport.add(layer2);
+          viewport.add(layer3);
 
-          layer1.sceneCanvas.context.fillStyle = 'red';
-          layer1.sceneCanvas.context.fillRect(0, 0, 50, 50); 
+          layer1.scene.context.fillStyle = 'red';
+          layer1.scene.context.fillRect(0, 0, 50, 50); 
 
-          layer2.sceneCanvas.context.fillStyle = 'yellow';
-          layer2.sceneCanvas.context.fillRect(50, 0, 50, 50); 
+          layer2.scene.context.fillStyle = 'yellow';
+          layer2.scene.context.fillRect(50, 0, 50, 50); 
 
-          layer3.sceneCanvas.context.fillStyle = 'blue';
-          layer3.sceneCanvas.context.fillRect(100, 0, 50, 50); 
+          layer3.scene.context.fillStyle = 'blue';
+          layer3.scene.context.fillRect(100, 0, 50, 50); 
 
-          // check concrete.layers order
-          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer1');
-          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer2');
-          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer3');
+          // check viewport.layers order
+          assert.equal(viewport.layers[0].container.getAttribute('id'), 'layer1');
+          assert.equal(viewport.layers[1].container.getAttribute('id'), 'layer2');
+          assert.equal(viewport.layers[2].container.getAttribute('id'), 'layer3');
 
           // check dom order
-          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer1');
-          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer2');
-          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer3');
+          assert.equal(viewport.container.children[0].getAttribute('id'), 'layer1');
+          assert.equal(viewport.container.children[1].getAttribute('id'), 'layer2');
+          assert.equal(viewport.container.children[2].getAttribute('id'), 'layer3');
 
           layer3.moveToBottom();
 
-          // check concrete.layers order
-          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer3');
-          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer1');
-          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer2');
+          // check viewport.layers order
+          assert.equal(viewport.layers[0].container.getAttribute('id'), 'layer3');
+          assert.equal(viewport.layers[1].container.getAttribute('id'), 'layer1');
+          assert.equal(viewport.layers[2].container.getAttribute('id'), 'layer2');
 
           // check dom order
-          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer3');
-          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer1');
-          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer2');
+          assert.equal(viewport.container.children[0].getAttribute('id'), 'layer3');
+          assert.equal(viewport.container.children[1].getAttribute('id'), 'layer1');
+          assert.equal(viewport.container.children[2].getAttribute('id'), 'layer2');
         });
 
         test('hit detection', function(){
-          var concrete = new Concrete.Wrapper({
+          var viewport = new Concrete.Viewport({
             width: 500,
             height: 200,
-            container: concreteContainer
+            container: viewportContainer
           });
 
           var layer = new Concrete.Layer();
 
-          concrete.add(layer);
+          viewport.add(layer);
 
-          layer.sceneCanvas.context.fillStyle = 'red';
-          layer.sceneCanvas.context.fillRect(0, 0, 50, 50);
+          layer.scene.context.fillStyle = 'red';
+          layer.scene.context.fillRect(0, 0, 50, 50);
 
-          layer.hitCanvas.context.fillStyle = layer.hitCanvas.getColorFromKey(12345);
-          layer.hitCanvas.context.fillRect(0, 0, 50, 50);
+          layer.hit.context.fillStyle = layer.hit.getColorFromKey(12345);
+          layer.hit.context.fillRect(0, 0, 50, 50);
 
-          assert.equal(layer.hitCanvas.keyToColor[12345], 0);
-
-          // in red rectangle
-          assert.equal(layer.hitCanvas.getIntersection(0, 0), 12345);
-          assert.equal(layer.hitCanvas.getIntersection(5, 5), 12345);
-          assert.equal(layer.hitCanvas.getIntersection(49, 49), 12345);
-
-          // out of red rectangle
-          assert.equal(layer.hitCanvas.getIntersection(100, 100), null);
+          assert.equal(layer.hit.keyToColor[12345], 0);
 
           // in red rectangle
-          assert.equal(concrete.getIntersection(0, 0), 12345);
-          assert.equal(concrete.getIntersection(5, 5), 12345);
-          assert.equal(concrete.getIntersection(49, 49), 12345);
+          assert.equal(layer.hit.getIntersection(0, 0), 12345);
+          assert.equal(layer.hit.getIntersection(5, 5), 12345);
+          assert.equal(layer.hit.getIntersection(49, 49), 12345);
 
           // out of red rectangle
-          assert.equal(concrete.getIntersection(100, 100), null);
+          assert.equal(layer.hit.getIntersection(100, 100), null);
+
+          // in red rectangle
+          assert.equal(viewport.getIntersection(0, 0), 12345);
+          assert.equal(viewport.getIntersection(5, 5), 12345);
+          assert.equal(viewport.getIntersection(49, 49), 12345);
+
+          // out of red rectangle
+          assert.equal(viewport.getIntersection(100, 100), null);
         });
 
         test('layer moveUp()', function(){
-          var concrete = new Concrete.Wrapper({
+          var viewport = new Concrete.Viewport({
             width: 500,
             height: 200,
-            container: concreteContainer
+            container: viewportContainer
           });
 
           var layer1 = new Concrete.Layer();
@@ -311,47 +311,47 @@
           layer2.container.id = 'layer2';
           layer3.container.id = 'layer3';
 
-          concrete.add(layer1);
-          concrete.add(layer2);
-          concrete.add(layer3);
+          viewport.add(layer1);
+          viewport.add(layer2);
+          viewport.add(layer3);
 
-          layer1.sceneCanvas.context.fillStyle = 'red';
-          layer1.sceneCanvas.context.fillRect(0, 0, 50, 50); 
+          layer1.scene.context.fillStyle = 'red';
+          layer1.scene.context.fillRect(0, 0, 50, 50); 
 
-          layer2.sceneCanvas.context.fillStyle = 'yellow';
-          layer2.sceneCanvas.context.fillRect(50, 0, 50, 50); 
+          layer2.scene.context.fillStyle = 'yellow';
+          layer2.scene.context.fillRect(50, 0, 50, 50); 
 
-          layer3.sceneCanvas.context.fillStyle = 'blue';
-          layer3.sceneCanvas.context.fillRect(100, 0, 50, 50); 
+          layer3.scene.context.fillStyle = 'blue';
+          layer3.scene.context.fillRect(100, 0, 50, 50); 
 
-          // check concrete.layers order
-          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer1');
-          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer2');
-          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer3');
+          // check viewport.layers order
+          assert.equal(viewport.layers[0].container.getAttribute('id'), 'layer1');
+          assert.equal(viewport.layers[1].container.getAttribute('id'), 'layer2');
+          assert.equal(viewport.layers[2].container.getAttribute('id'), 'layer3');
 
           // check dom order
-          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer1');
-          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer2');
-          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer3');
+          assert.equal(viewport.container.children[0].getAttribute('id'), 'layer1');
+          assert.equal(viewport.container.children[1].getAttribute('id'), 'layer2');
+          assert.equal(viewport.container.children[2].getAttribute('id'), 'layer3');
 
           layer1.moveUp();
 
-          // check concrete.layers order
-          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer2');
-          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer1');
-          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer3');
+          // check viewport.layers order
+          assert.equal(viewport.layers[0].container.getAttribute('id'), 'layer2');
+          assert.equal(viewport.layers[1].container.getAttribute('id'), 'layer1');
+          assert.equal(viewport.layers[2].container.getAttribute('id'), 'layer3');
 
           // check dom order
-          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer2');
-          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer1');
-          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer3');
+          assert.equal(viewport.container.children[0].getAttribute('id'), 'layer2');
+          assert.equal(viewport.container.children[1].getAttribute('id'), 'layer1');
+          assert.equal(viewport.container.children[2].getAttribute('id'), 'layer3');
         });
 
         test('layer moveDown()', function(){
-          var concrete = new Concrete.Wrapper({
+          var viewport = new Concrete.Viewport({
             width: 500,
             height: 200,
-            container: concreteContainer
+            container: viewportContainer
           });
 
           var layer1 = new Concrete.Layer();
@@ -362,83 +362,83 @@
           layer2.container.id = 'layer2';
           layer3.container.id = 'layer3';
 
-          concrete.add(layer1);
-          concrete.add(layer2);
-          concrete.add(layer3);
+          viewport.add(layer1);
+          viewport.add(layer2);
+          viewport.add(layer3);
 
-          layer1.sceneCanvas.context.fillStyle = 'red';
-          layer1.sceneCanvas.context.fillRect(0, 0, 50, 50); 
+          layer1.scene.context.fillStyle = 'red';
+          layer1.scene.context.fillRect(0, 0, 50, 50); 
 
-          layer2.sceneCanvas.context.fillStyle = 'yellow';
-          layer2.sceneCanvas.context.fillRect(50, 0, 50, 50); 
+          layer2.scene.context.fillStyle = 'yellow';
+          layer2.scene.context.fillRect(50, 0, 50, 50); 
 
-          layer3.sceneCanvas.context.fillStyle = 'blue';
-          layer3.sceneCanvas.context.fillRect(100, 0, 50, 50); 
+          layer3.scene.context.fillStyle = 'blue';
+          layer3.scene.context.fillRect(100, 0, 50, 50); 
 
-          // check concrete.layers order
-          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer1');
-          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer2');
-          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer3');
+          // check viewport.layers order
+          assert.equal(viewport.layers[0].container.getAttribute('id'), 'layer1');
+          assert.equal(viewport.layers[1].container.getAttribute('id'), 'layer2');
+          assert.equal(viewport.layers[2].container.getAttribute('id'), 'layer3');
 
           // check dom order
-          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer1');
-          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer2');
-          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer3');
+          assert.equal(viewport.container.children[0].getAttribute('id'), 'layer1');
+          assert.equal(viewport.container.children[1].getAttribute('id'), 'layer2');
+          assert.equal(viewport.container.children[2].getAttribute('id'), 'layer3');
 
           layer3.moveDown();
 
-          // check concrete.layers order
-          assert.equal(concrete.layers[0].container.getAttribute('id'), 'layer1');
-          assert.equal(concrete.layers[1].container.getAttribute('id'), 'layer3');
-          assert.equal(concrete.layers[2].container.getAttribute('id'), 'layer2');
+          // check viewport.layers order
+          assert.equal(viewport.layers[0].container.getAttribute('id'), 'layer1');
+          assert.equal(viewport.layers[1].container.getAttribute('id'), 'layer3');
+          assert.equal(viewport.layers[2].container.getAttribute('id'), 'layer2');
 
           // check dom order
-          assert.equal(concrete.container.children[0].getAttribute('id'), 'layer1');
-          assert.equal(concrete.container.children[1].getAttribute('id'), 'layer3');
-          assert.equal(concrete.container.children[2].getAttribute('id'), 'layer2');
+          assert.equal(viewport.container.children[0].getAttribute('id'), 'layer1');
+          assert.equal(viewport.container.children[1].getAttribute('id'), 'layer3');
+          assert.equal(viewport.container.children[2].getAttribute('id'), 'layer2');
         });
 
         test('destroy layer', function(){
-          var concrete = new Concrete.Wrapper({
+          var viewport = new Concrete.Viewport({
             width: 500,
             height: 200,
-            container: concreteContainer
+            container: viewportContainer
           });
 
           var layer = new Concrete.Layer();
 
-          assert.equal(concrete.layers.length, 0);
+          assert.equal(viewport.layers.length, 0);
 
-          concrete.add(layer);
+          viewport.add(layer);
 
-          assert.equal(concrete.layers.length, 1);
-          assert.equal(concrete.container.children.length, 1);
+          assert.equal(viewport.layers.length, 1);
+          assert.equal(viewport.container.children.length, 1);
 
           layer.destroy();
 
-          assert.equal(concrete.layers.length, 0);
-          assert.equal(concrete.container.children.length, 0);
+          assert.equal(viewport.layers.length, 0);
+          assert.equal(viewport.container.children.length, 0);
         });
 
-        test('wrapper toCanvas() and then toImage()', function(done){
-          var concrete = new Concrete.Wrapper({
+        test('wrapper toScene() and then toImage()', function(done){
+          var viewport = new Concrete.Viewport({
             width: 500,
             height: 200,
-            container: concreteContainer
+            container: viewportContainer
           });
 
           var layer = new Concrete.Layer();
 
-          concrete.add(layer);
+          viewport.add(layer);
 
-          layer.sceneCanvas.context.beginPath();
-          layer.sceneCanvas.context.fillStyle = 'red';
-          layer.sceneCanvas.context.font = '20px Georgia';
-          layer.sceneCanvas.context.fillText('Hello there!', 0, 50);
+          layer.scene.context.beginPath();
+          layer.scene.context.fillStyle = 'red';
+          layer.scene.context.font = '20px Georgia';
+          layer.scene.context.fillText('Hello there!', 0, 50);
 
-          var canvas = concrete.toCanvas();
+          var scene = viewport.toScene();
 
-          canvas.toImage(function(image) {
+          scene.toImage(function(image) {
             imageContainer.innerHTML = '';
             imageContainer.appendChild(image);
             assert.equal(image.width, 500);
@@ -448,25 +448,25 @@
         });
 
         test('wrapper toCanvas() and then download()', function(){
-          var concrete = new Concrete.Wrapper({
+          var viewport = new Concrete.Viewport({
             width: 500,
             height: 200,
-            container: concreteContainer
+            container: viewportContainer
           });
 
           var layer = new Concrete.Layer();
 
-          concrete.add(layer);
+          viewport.add(layer);
 
-          layer.sceneCanvas.context.fillStyle = 'white';
-          layer.sceneCanvas.context.fillRect(0, 0, 500, 200);
+          layer.scene.context.fillStyle = 'white';
+          layer.scene.context.fillRect(0, 0, 500, 200);
 
-          layer.sceneCanvas.context.beginPath();
-          layer.sceneCanvas.context.fillStyle = 'red';
-          layer.sceneCanvas.context.font = '20px Georgia';
-          layer.sceneCanvas.context.fillText('Hello there!', 0, 50);
+          layer.scene.context.beginPath();
+          layer.scene.context.fillStyle = 'red';
+          layer.scene.context.font = '20px Georgia';
+          layer.scene.context.fillText('Hello there!', 0, 50);
 
-          //concrete.toCanvas({pixelRatio: 1}).download();
+          //viewport.toCanvas({pixelRatio: 1}).download();
         });
 
         mocha.run();
