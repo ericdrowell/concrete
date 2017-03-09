@@ -1,6 +1,6 @@
 {
   "name": "concrete",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "devDependencies": {
     "chai": "^3.4.1",
     "gulp": "^3.9.0",

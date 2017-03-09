@@ -399,31 +399,26 @@
      * @param {String} config.fileName
      */
     download: function(config) {
-      var dataURL = this.canvas.toDataURL('image/png'),
-          anchor = document.createElement('a'),
-          fileName, evtObj;
+      this.canvas.toBlob(function(blob) {
+        var anchor = document.createElement('a'),
+            dataUrl  = URL.createObjectURL(blob),
+            fileName = config.fileName || 'canvas.png';
 
-      if (!config) {
-        config = {};
-      }
+        // set a attributes
+        anchor.setAttribute('href', dataUrl);
+        anchor.setAttribute('target', '_blank');
+        anchor.setAttribute('download', fileName);
 
-      fileName = config.fileName || 'canvas.png',
-      dataURL = dataURL.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
-
-      // set a attributes
-      anchor.setAttribute('href', dataURL);
-      anchor.setAttribute('target', '_blank');
-      anchor.setAttribute('download', fileName);
-
-      // simulate click
-      if (document.createEvent) {
-        evtObj = document.createEvent('MouseEvents');
-        evtObj.initEvent('click', true, true);
-        anchor.dispatchEvent(evtObj);
-      }
-      else if (anchor.click) {
-        anchor.click();
-      }
+        // simulate click
+        if (document.createEvent) {
+          evtObj = document.createEvent('MouseEvents');
+          evtObj.initEvent('click', true, true);
+          anchor.dispatchEvent(evtObj);
+        }
+        else if (anchor.click) {
+          anchor.click();
+        }
+      });
     }
   };
 
