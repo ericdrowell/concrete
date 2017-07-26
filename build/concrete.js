@@ -159,7 +159,9 @@
       scene.clear();
 
       this.layers.forEach(function(layer) {
-        scene.context.drawImage(layer.scene.canvas, 0, 0, layer.width, layer.height);
+        if (layer.visible) {
+          scene.context.drawImage(layer.scene.canvas, 0, 0, layer.width, layer.height);
+        }
       });
     }
   };
@@ -182,7 +184,7 @@
     this.y = 0;
     this.width = 0;
     this.height = 0;
-
+    this.visible = true;
     this.id = idCounter++;
     this.hit = new Concrete.Hit();
     this.scene = new Concrete.Scene();
