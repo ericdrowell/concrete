@@ -24,6 +24,7 @@
         circles.forEach(function(circle) {
           drawSceneCircle(circle);
         });
+        viewport.render();
       }
 
       function drawHitCircles() {
@@ -223,6 +224,7 @@
         if (circle) {
           circle.layer.moveUp();
         }
+        viewport.render();
       });
 
       document.getElementById('moveDown').addEventListener('click', function() {
@@ -231,6 +233,7 @@
         if (circle) {
           circle.layer.moveDown();
         }
+        viewport.render();
       });
 
       document.getElementById('moveToTop').addEventListener('click', function() {
@@ -239,6 +242,7 @@
         if (circle) {
           circle.layer.moveToTop();
         }
+        viewport.render();
       });
 
       document.getElementById('moveToBottom').addEventListener('click', function() {
@@ -247,6 +251,7 @@
         if (circle) {
           circle.layer.moveToBottom();
         }
+        viewport.render();
       });
 
       document.getElementById('destroy').addEventListener('click', function() {
@@ -255,10 +260,11 @@
         if (circle) {
           circle.layer.destroy();
         }
+        viewport.render();
       });
 
       document.getElementById('download').addEventListener('click', function() {
-        viewport.toScene().download({
+        viewport.scene.download({
           fileName: 'three-circles.png'
         });
       });

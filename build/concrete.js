@@ -1,8 +1,8 @@
 /*
- * Concrete v1.0.1
- * A lightweight Html5 Canvas framework that enables hit detection, layer support, 
- * pixel ratio management, exports, and downloads
- * Release Date: 3-8-2017
+ * Concrete v2.0.0
+ * A lightweight Html5 Canvas framework that enables hit detection, layering, multi buffering, 
+ * pixel ratio management, exports, and image downloads
+ * Release Date: 7-26-2017
  * https://github.com/ericdrowell/concrete
  * Licensed under the MIT or GPL Version 2 licenses.
  *
@@ -55,23 +55,18 @@
     if (!config) {
       config = {};
     }
-    this.width = 0;
-    this.height = 0;
+
+    this.container = config.container;
     this.layers = []; 
     this.id = idCounter++;
-
-    this.container = document.createElement('div');
-    this.container.className = 'concrete-container';
-    this.container.style.display = 'inline-block';
-    this.container.style.position = 'relative';
-
-    if (config.width && config.height) {
-      this.setSize(config.width, config.height);
-    }
+    this.scene = new Concrete.Scene();
+  
+    this.setSize(config.width || 0, config.height || 0);
+    
 
     // clear container
     config.container.innerHTML = '';
-    config.container.appendChild(this.container);
+    config.container.appendChild(this.scene.canvas);
 
     Concrete.viewports.push(this);
   };
@@ -86,7 +81,6 @@
       this.layers.push(layer);
       layer.setSize(layer.width || this.width, layer.height || this.height);
       layer.viewport = this;
-      this.container.appendChild(layer.container);
       return this;
     },
     /**
@@ -98,8 +92,7 @@
     setSize: function(width, height) {
       this.width = width;
       this.height = height;
-      this.container.style.width = this.width + 'px';
-      this.container.style.height = this.height + 'px';
+      this.scene.setSize(width, height);
       return this;
     },
     /**
@@ -122,28 +115,6 @@
       }
 
       return null;
-    },
-    /** 
-     * convert viewport into a Concrete scene
-     * @param {Object} config
-     * @param {Number} config.pixelRatio - typically 1 or 2
-     * @returns {Concrete.Scene}
-     */
-    toScene: function(config) {
-      if (!config) {
-        config = {};
-      }
-      var scene = new Concrete.Scene({
-        pixelRatio: config.pixelRatio,
-        width: this.width,
-        height: this.height
-      });
-
-      this.layers.forEach(function(layer) {
-        scene.context.drawImage(layer.scene.canvas, 0, 0, layer.width, layer.height);
-      });
-
-      return scene;
     },
     /** 
      * get viewport index from all Concrete viewports
@@ -173,8 +144,23 @@
         layer.destroy();
       });
 
+      // clear dom
+      this.container.innerHTML = '';
+      
       // remove self from viewports array
       Concrete.viewports.splice(this.getIndex(), 1);
+    },
+    /**
+     * composite all layers onto visible canvas
+     */
+    render: function() {
+      var scene = this.scene;
+
+      scene.clear();
+
+      this.layers.forEach(function(layer) {
+        scene.context.drawImage(layer.scene.canvas, 0, 0, layer.width, layer.height);
+      });
     }
   };
 
@@ -201,13 +187,6 @@
     this.hit = new Concrete.Hit();
     this.scene = new Concrete.Scene();
 
-    this.container = document.createElement('div');
-    this.container.className = 'concrete-layer';
-    this.container.style.display = 'inline-block';
-    this.container.style.position = 'absolute';
-    this.container.appendChild(this.hit.canvas);
-    this.container.appendChild(this.scene.canvas);
-
     if (config.x && config.y) {
       this.setPosition(config.x, config.y);
     }
@@ -225,9 +204,7 @@
      */
     setPosition: function(x, y) {
       this.x = x;
-      this.container.style.left = x + 'px';
       this.y = y;
-      this.container.style.top = y + 'px';
       return this;
     },
     /**
@@ -238,9 +215,7 @@
      */
     setSize: function(width, height) {
       this.width = width;
-      this.container.style.width = width + 'px';
       this.height = height;
-      this.container.style.height = height + 'px';
       this.scene.setSize(width, height);
       this.hit.setSize(width, height);
       return this;
@@ -258,8 +233,6 @@
         // swap
         layers[index] = layers[index+1];
         layers[index+1] = this;
-
-        viewport.container.insertBefore(this.container, viewport.container.children[index+2]);
       }
 
       return this;
@@ -277,8 +250,6 @@
         // swap
         layers[index] = layers[index-1];
         layers[index-1] = this;
-
-        viewport.container.insertBefore(this.container, viewport.container.children[index-1]);
       }
 
       return this;
@@ -294,8 +265,6 @@
 
       layers.splice(index, 1);
       layers.push(this);
-
-      viewport.container.appendChild(this.container);
     },
     /** 
      * move to bottom
@@ -308,8 +277,6 @@
 
       layers.splice(index, 1);
       layers.unshift(this);
-
-      viewport.container.insertBefore(this.container, viewport.container.firstChild);
 
       return this;
     },
@@ -338,9 +305,6 @@
     destroy: function() {
       // remove self from layers array
       this.viewport.layers.splice(this.getIndex(), 1);
-
-      // remove self from dom
-      this.viewport.container.removeChild(this.container);
     }
   };
 
@@ -366,7 +330,6 @@
     this.canvas = document.createElement('canvas');
     this.canvas.className = 'concrete-scene-canvas';
     this.canvas.style.display = 'inline-block';
-    this.canvas.style.position = 'absolute';
     this.context = this.canvas.getContext('2d');
 
     if (config.width && config.height) {

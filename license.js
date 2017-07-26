@@ -1,7 +1,7 @@
 /*
  * Concrete v@@VERSION
- * A lightweight Html5 Canvas framework that enables hit detection, layer support, 
- * pixel ratio management, exports, and downloads
+ * A lightweight Html5 Canvas framework that enables hit detection, layering, multi buffering, 
+ * pixel ratio management, exports, and image downloads
  * Release Date: @@DATE
  * https://github.com/ericdrowell/concrete
  * Licensed under the MIT or GPL Version 2 licenses.
