@@ -17,7 +17,7 @@
         <div class="links">
           <a href="https://github.com/ericdrowell/concrete" class="github" target="_blank"><span class="fa fa-github"></span><span class="text">Github</span></a>
 
-          <a class="download" href="https://raw.githubusercontent.com/ericdrowell/concrete/master/build/concrete.min.js" target="_blank" class="cta">Download v1.0.1</a>
+          <a class="download" href="https://raw.githubusercontent.com/ericdrowell/concrete/master/build/concrete.min.js" target="_blank" class="cta">Download v3.0.0</a>
 
           <a href="https://twitter.com/ericdrowell" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @ericdrowell</a>
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -42,10 +42,12 @@
           <h2>Concrete.Viewport</h2>
           <ul>
             <li><a href="#viewport-constructor">constructor</a></li>
+            <li><a href="#viewport-scene">.scene</a></li>
             <li><a href="#viewport-add">.add()</a></li>
+            <li><a href="#viewport-render">.render()</a></li>
             <li><a href="#viewport-setSize">.setSize()</a></li>
             <li><a href="#viewport-getIntersection">.getIntersection()</a></li>
-            <li><a href="#viewport-toScene">.toScene()</a></li>
+            
             <li><a href="#viewport-getIndex">.getIndex()</a></li>
             <li><a href="#viewport-destroy">.destroy()</a></li>
           </ul>
@@ -56,6 +58,7 @@
             <li><a href="#layer-constructor">constructor</a></li>
             <li><a href="#layer-scene">.scene</a></li>
             <li><a href="#layer-hit">.hit</a></li>
+            <li><a href="#layer-visible">.visible</a></li>
             <li><a href="#layer-setPosition">.setPosition()</a></li>
             <li><a href="#layer-setSize">.setSize()</a></li>
             <li><a href="#layer-moveUp">.moveUp()</a></li>
@@ -86,7 +89,7 @@
             <li><a href="#hit-canvas">.canvas</a></li>
             <li><a href="#hit-setSize">.setSize()</a></li>
             <li><a href="#hit-clear">.clear()</a></li>
-            <li><a href="#hit-getColorFromKey">.getColorFromKey()</a></li>
+            <li><a href="#hit-getColorFromIndex">.getColorFromIndex()</a></li>
             <li><a href="#hit-getIntersection">.getIntersection()</a></li>
           </ul>
         </li>
@@ -103,7 +106,7 @@
           <h2>Getting Started</h2>
           <ul>
             <li>
-              <h3 id="download">Download v1.0.1</h3>
+              <h3 id="download">Download v2.0.0</h3>
               <ul>
                 <li><a href="https://raw.githubusercontent.com/ericdrowell/concrete/master/build/concrete.js" target="_blank">Github concrete.js</a></li>
                 <li><a href="https://raw.githubusercontent.com/ericdrowell/concrete/master/build/concrete.min.js" target="_blank">Github concrete.min.js</a></li>
@@ -112,7 +115,7 @@
             <li>
               <h3 id="why-concrete">Why Concrete</h3>
               <p>
-                Concrete is a lightweight Html5 Canvas framework that enables hit detection, layer support, pixel ratio management, exports, and downloads.
+                Concrete is an ultra fast, lightweight Html5 Canvas framework that enables hit detection, layering, pixel ratio management, exports, and downloads.
               </p>
               <p>
                 As the creator of KineticJS, author of HTML5 Canvas Cookbook, founder of HTML5CanvasTutorials.com, founder of MeteorCharts, and the principal data visualization engineer at Platfora, acquired by Workday, I've identified a handful of features that just about every HTML5 Canvas project needs.  Concrete packages up these features into a lightweight framework of about 600 lines of JavaScript, including documentation.  
@@ -152,9 +155,19 @@ var viewports = Concrete.viewports;</code></pre>
 <pre><code class="javascript">var viewport = new Concrete.Viewport();</code></pre>
             </li>
             <li>
+              <h3 id="viewport-scene">.scene</h3>         
+<pre><code class="javascript">// get viewport scene
+var scene = viewport.scene;</code></pre>
+            </li>
+            <li>
               <h3 id="viewport-add">.add()</h3>
 <pre><code class="javascript">// add layer to the viewport
 viewport.add(layer);</code></pre>
+            </li>
+            <li>
+              <h3 id="viewport-render">.render()</h3>
+<pre><code class="javascript">// render the viewport by compositing all layers into a single viewport scene canvas
+viewport.render();</code></pre>
             </li>
             <li>
               <h3 id="viewport-setSize">.setSize()</h3>         
@@ -163,16 +176,6 @@ viewport.add(layer);</code></pre>
             <li>
               <h3 id="viewport-getIntersection">.getIntersection()</h3>         
 <pre><code class="javascript">var key = viewport.getIntersection(20, 30);</code></pre>
-            </li>
-            <li>
-              <h3 id="viewport-toScene">.toScene()</h3>         
-<pre><code class="javascript">// export to Concrete scene
-var canvas = viewport.toScene();
-
-// export to scene using a specific pixel ratio
-var canvas = viewport.toScene({
-  pixelRatio: 1
-});</code></pre>
             </li>
             <li>
               <h3 id="viewport-getIndex">.getIndex()</h3>         
@@ -203,8 +206,18 @@ layer.scene.context.fillRect(0, 0, 100, 50);</code></pre>
             <li>
               <h3 id="layer-hit">.hit</h3>         
 <pre><code class="javascript">// draw a rectangle on the hit canvas for interactivity
-layer.hit.context.fillStyle = layer.hit.getColorFromKey('myKey');
+layer.hit.context.fillStyle = layer.hit.getColorFromIndex(0);
 layer.hit.context.fillRect(0, 0, 100, 50);</code></pre>
+            </li>
+            <li>
+              <h3 id="layer-visible">.visible</h3>         
+<pre><code class="javascript">// hide layer
+layer.visible=false;
+viewport.render();
+
+// show layer
+layer.visible=true;
+viewport.render();</code></pre>
             </li>
             <li>
               <h3 id="layer-setPosition">.setPosition()</h3>         
@@ -257,7 +270,7 @@ var context = scene.context;</code></pre>
             </li>
             <li>
               <h3 id="scene-canvas">.canvas</h3>         
-<pre><code class="javascript">// get native canvas
+<pre><code class="javascript">// get canvas element
 var canvas = scene.canvas;</code></pre>
             </li>
             <li>
@@ -299,7 +312,7 @@ var context = hit.context;</code></pre>
             </li>
             <li>
               <h3 id="hit-canvas">.canvas</h3>         
-<pre><code class="javascript">// get native canvas
+<pre><code class="javascript">// get canvas element
 var canvas = hit.canvas;</code></pre>
             </li>
             <li>
@@ -311,13 +324,13 @@ var canvas = hit.canvas;</code></pre>
 <pre><code class="javascript">hit.clear();</code></pre>
             </li>
             <li>
-              <h3 id="hit-getColorFromKey">.getColorFromKey()</h3>         
-<pre><code class="javascript">// get hit color from key.  This enables mouse detection when using getIntersection()
-var color = hit.getColorFromKey('myKey');</code></pre>
+              <h3 id="hit-getColorFromIndex">.getColorFromIndex()</h3>         
+<pre><code class="javascript">// get hit color from index.  This enables mouse detection when using getIntersection()
+var color = hit.getColorFromIndex(0);</code></pre>
             </li>
             <li>
               <h3 id="hit-getIntersection">.getIntersection()</h3>         
-<pre><code class="javascript">var key = hit.getIntersection(20, 30);</code></pre>
+<pre><code class="javascript">var dataIndex = hit.getIntersection(20, 30);</code></pre>
             </li>
           </ul>
         </li>

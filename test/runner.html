@@ -104,11 +104,15 @@
           layer.scene.context.fillStyle = 'red';
           layer.scene.context.fillRect(0, 0, 50, 50);
 
+          viewport.render();
+
           layer.scene.clear();
 
           layer.scene.context.beginPath();
           layer.scene.context.fillStyle = 'blue';
           layer.scene.context.fillRect(50, 0, 50, 50);
+
+          viewport.render();
 
           assert.ok(true);
         });
@@ -136,6 +140,8 @@
 
           layer3.scene.context.fillStyle = 'blue';
           layer3.scene.context.fillRect(100, 0, 50, 50); 
+
+          viewport.render();
         });
 
         test('layer getIndex()', function(){
@@ -186,6 +192,8 @@
           layer3.scene.context.fillStyle = 'blue';
           layer3.scene.context.fillRect(100, 0, 50, 50); 
 
+          viewport.render();
+
           // check viewport.layers order
           assert.equal(viewport.layers[0].id, 'layer1');
           assert.equal(viewport.layers[1].id, 'layer2');
@@ -227,6 +235,8 @@
           layer3.scene.context.fillStyle = 'blue';
           layer3.scene.context.fillRect(100, 0, 50, 50); 
 
+          viewport.render();
+
           // check viewport.layers order
           assert.equal(viewport.layers[0].id, 'layer1');
           assert.equal(viewport.layers[1].id, 'layer2');
@@ -248,6 +258,8 @@
             container: viewportContainer
           });
 
+          window.viewport = viewport;
+
           var layer = new Concrete.Layer();
 
           viewport.add(layer);
@@ -255,10 +267,10 @@
           layer.scene.context.fillStyle = 'red';
           layer.scene.context.fillRect(0, 0, 50, 50);
 
-          layer.hit.context.fillStyle = layer.hit.getColorFromKey(12345);
-          layer.hit.context.fillRect(0, 0, 50, 50);
+          viewport.render();
 
-          assert.equal(layer.hit.keyToColor[12345], 0);
+          layer.hit.context.fillStyle = layer.hit.getColorFromIndex(12345);
+          layer.hit.context.fillRect(0, 0, 50, 50);
 
           // in red rectangle
           assert.equal(layer.hit.getIntersection(0, 0), 12345);
@@ -266,7 +278,7 @@
           assert.equal(layer.hit.getIntersection(49, 49), 12345);
 
           // out of red rectangle
-          assert.equal(layer.hit.getIntersection(100, 100), null);
+          assert.equal(layer.hit.getIntersection(100, 100), -1);
 
           // in red rectangle
           assert.equal(viewport.getIntersection(0, 0), 12345);
@@ -274,7 +286,7 @@
           assert.equal(viewport.getIntersection(49, 49), 12345);
 
           // out of red rectangle
-          assert.equal(viewport.getIntersection(100, 100), null);
+          assert.equal(viewport.getIntersection(100, 100), -1);
         });
 
         test('layer moveUp()', function(){
@@ -304,6 +316,8 @@
 
           layer3.scene.context.fillStyle = 'blue';
           layer3.scene.context.fillRect(100, 0, 50, 50); 
+
+          viewport.render();
 
           // check viewport.layers order
           assert.equal(viewport.layers[0].id, 'layer1');
@@ -346,6 +360,8 @@
 
           layer3.scene.context.fillStyle = 'blue';
           layer3.scene.context.fillRect(100, 0, 50, 50); 
+
+          viewport.render();
 
           // check viewport.layers order
           assert.equal(viewport.layers[0].id, 'layer1');
@@ -399,6 +415,8 @@
           layer.scene.context.font = '20px Georgia';
           layer.scene.context.fillText('Hello there!', 0, 50);
 
+          viewport.render();
+
           var scene = viewport.scene;
 
           scene.toImage(function(image) {
@@ -428,6 +446,8 @@
           layer.scene.context.fillStyle = 'red';
           layer.scene.context.font = '20px Georgia';
           layer.scene.context.fillText('Hello there!', 0, 50);
+
+          viewport.render();
 
           //viewport.toCanvas({pixelRatio: 1}).download();
         });

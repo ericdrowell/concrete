@@ -17,7 +17,7 @@
         <div class="links">
           <a href="https://github.com/ericdrowell/concrete" class="github" target="_blank"><span class="fa fa-github"></span><span class="text">Github</span></a>
 
-          <a class="download" href="https://raw.githubusercontent.com/ericdrowell/concrete/master/build/concrete.min.js" target="_blank">Download v1.0.1</a>
+          <a class="download" href="https://raw.githubusercontent.com/ericdrowell/concrete/master/build/concrete.min.js" target="_blank">Download v3.0.0</a>
 
           <a href="https://twitter.com/ericdrowell" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @ericdrowell</a>
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -42,10 +42,12 @@
           <h2>Concrete.Viewport</h2>
           <ul>
             <li><a href="#viewport-constructor">constructor</a></li>
+            <li><a href="#viewport-scene">.scene</a></li>
             <li><a href="#viewport-add">.add()</a></li>
+            <li><a href="#viewport-render">.render()</a></li>
             <li><a href="#viewport-setSize">.setSize()</a></li>
             <li><a href="#viewport-getIntersection">.getIntersection()</a></li>
-            <li><a href="#viewport-toScene">.toScene()</a></li>
+            
             <li><a href="#viewport-getIndex">.getIndex()</a></li>
             <li><a href="#viewport-destroy">.destroy()</a></li>
           </ul>
@@ -56,6 +58,7 @@
             <li><a href="#layer-constructor">constructor</a></li>
             <li><a href="#layer-scene">.scene</a></li>
             <li><a href="#layer-hit">.hit</a></li>
+            <li><a href="#layer-visible">.visible</a></li>
             <li><a href="#layer-setPosition">.setPosition()</a></li>
             <li><a href="#layer-setSize">.setSize()</a></li>
             <li><a href="#layer-moveUp">.moveUp()</a></li>
@@ -86,7 +89,7 @@
             <li><a href="#hit-canvas">.canvas</a></li>
             <li><a href="#hit-setSize">.setSize()</a></li>
             <li><a href="#hit-clear">.clear()</a></li>
-            <li><a href="#hit-getColorFromKey">.getColorFromKey()</a></li>
+            <li><a href="#hit-getColorFromIndex">.getColorFromIndex()</a></li>
             <li><a href="#hit-getIntersection">.getIntersection()</a></li>
           </ul>
         </li>
@@ -103,7 +106,7 @@
           <h2>Getting Started</h2>
           <ul>
             <li>
-              <h3 id="download">Download v1.0.1</h3>
+              <h3 id="download">Download v2.0.0</h3>
               <ul>
                 <li><a href="https://raw.githubusercontent.com/ericdrowell/concrete/master/build/concrete.js" target="_blank">Github concrete.js</a></li>
                 <li><a href="https://raw.githubusercontent.com/ericdrowell/concrete/master/build/concrete.min.js" target="_blank">Github concrete.min.js</a></li>
@@ -112,7 +115,7 @@
             <li>
               <h3 id="why-concrete">Why Concrete</h3>
               <p>
-                Concrete is a lightweight Html5 Canvas framework that enables hit detection, layer support, pixel ratio management, exports, and downloads.
+                Concrete is an ultra fast, lightweight Html5 Canvas framework that enables hit detection, layering, pixel ratio management, exports, and downloads.
               </p>
               <p>
                 As the creator of KineticJS, author of HTML5 Canvas Cookbook, founder of HTML5CanvasTutorials.com, founder of MeteorCharts, and the principal data visualization engineer at Platfora, acquired by Workday, I've identified a handful of features that just about every HTML5 Canvas project needs.  Concrete packages up these features into a lightweight framework of about 600 lines of JavaScript, including documentation.  
@@ -137,7 +140,7 @@
           <ul>
             <li>
               <h3 id="concrete-viewports">.viewports</h3> 
-<pre><code class="javascript">// get<span class="hljs-built_in"> array </span>of instantiated viewports
+<pre><code class="javascript hljs">// get<span class="hljs-built_in"> array </span>of instantiated viewports
 var viewports = Concrete.viewports;</code></pre>
             </li>
           </ul>
@@ -149,38 +152,38 @@ var viewports = Concrete.viewports;</code></pre>
           <ul>
             <li>
               <h3 id="viewport-constructor">constructor</h3>
-<pre><code class="javascript"><span class="hljs-keyword">var</span> viewport = <span class="hljs-keyword">new</span> Concrete.Viewport();</code></pre>
+<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> viewport = <span class="hljs-keyword">new</span> <span class="hljs-type">Concrete</span>.Viewport();</code></pre>
+            </li>
+            <li>
+              <h3 id="viewport-scene">.scene</h3>         
+<pre><code class="javascript hljs">// <span class="hljs-built_in">get</span> viewport <span class="hljs-built_in">scene</span>
+<span class="hljs-built_in">var</span> <span class="hljs-built_in">scene</span> = viewport.<span class="hljs-built_in">scene</span>;</code></pre>
             </li>
             <li>
               <h3 id="viewport-add">.add()</h3>
-<pre><code class="javascript"><span class="hljs-comment">// add layer to the viewport</span>
-viewport.add<span class="hljs-comment">(layer)</span>;</code></pre>
+<pre><code class="javascript hljs"><span class="hljs-comment">// add layer to the viewport</span>
+viewport.<span class="hljs-keyword">add</span>(layer);</code></pre>
+            </li>
+            <li>
+              <h3 id="viewport-render">.render()</h3>
+<pre><code class="javascript hljs"><span class="hljs-comment">// render the viewport by compositing all layers into a single viewport scene canvas</span>
+<span class="hljs-selector-tag">viewport</span><span class="hljs-selector-class">.render</span>();</code></pre>
             </li>
             <li>
               <h3 id="viewport-setSize">.setSize()</h3>         
-<pre><code class="javascript"><span class="hljs-selector-tag">viewport</span><span class="hljs-selector-class">.setSize</span>(600, 300);</code></pre>
+<pre><code class="javascript hljs">viewport.setSize(<span class="hljs-number">600</span>, <span class="hljs-number">300</span>);</code></pre>
             </li>
             <li>
               <h3 id="viewport-getIntersection">.getIntersection()</h3>         
-<pre><code class="javascript"><span class="hljs-title">var</span> key = view<span class="hljs-keyword">port</span>.getIntersection(20, 30);</code></pre>
-            </li>
-            <li>
-              <h3 id="viewport-toScene">.toScene()</h3>         
-<pre><code class="javascript">// ex<span class="hljs-keyword">port</span> to Concrete scene
-<span class="hljs-title">var</span> canvas = view<span class="hljs-keyword">port</span>.toScene();
-
-// ex<span class="hljs-keyword">port</span> to scene using a specific pixel ratio
-<span class="hljs-title">var</span> canvas = view<span class="hljs-keyword">port</span>.toScene({
-  pixelRatio: <span class="hljs-number">1</span>
-});</code></pre>
+<pre><code class="javascript hljs">var <span class="hljs-type">key</span> = viewport.getIntersection(<span class="hljs-number">20</span>, <span class="hljs-number">30</span>);</code></pre>
             </li>
             <li>
               <h3 id="viewport-getIndex">.getIndex()</h3>         
-<pre><code class="javascript"><span class="hljs-keyword">var</span> <span class="hljs-keyword">index</span> = viewport.getIndex();</code></pre>
+<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> <span class="hljs-keyword">index</span> = viewport.getIndex();</code></pre>
             </li>
             <li>
               <h3 id="viewport-destroy">.destroy()</h3>         
-<pre><code class="javascript"><span class="hljs-comment">// goodbye forever</span>
+<pre><code class="javascript hljs"><span class="hljs-comment">// goodbye forever</span>
 viewport.destroy<span class="hljs-comment">()</span>;</code></pre>
             </li>
           </ul>
@@ -192,51 +195,61 @@ viewport.destroy<span class="hljs-comment">()</span>;</code></pre>
           <ul>
             <li>
               <h3 id="layer-constructor">constructor</h3>         
-<pre><code class="javascript"><span class="hljs-keyword">var</span> layer = <span class="hljs-keyword">new</span> Concrete.Layer();</code></pre>
+<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> layer = <span class="hljs-keyword">new</span> <span class="hljs-type">Concrete</span>.Layer();</code></pre>
             </li>
             <li>
               <h3 id="layer-scene">.scene</h3>         
-<pre><code class="javascript">// <span class="hljs-built_in">draw</span> a <span class="hljs-built_in">rectangle</span> on the <span class="hljs-built_in">scene</span> canvas
-layer.<span class="hljs-built_in">scene</span>.<span class="hljs-built_in">context</span>.fillStyle = 'red';
-layer.<span class="hljs-built_in">scene</span>.<span class="hljs-built_in">context</span>.fillRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">50</span>);</code></pre>
+<pre><code class="javascript hljs"><span class="hljs-comment">// draw a rectangle on the scene canvas</span>
+layer.scene.context.fillStyle = 'red';
+layer.scene.context.fillRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">50</span>);</code></pre>
             </li>
             <li>
               <h3 id="layer-hit">.hit</h3>         
-<pre><code class="javascript"><span class="hljs-comment">// draw a rectangle on the hit canvas for interactivity</span>
-layer.hit.context.fillStyle = layer.hit.getColorFromKey(<span class="hljs-string">'myKey'</span>)<span class="hljs-comment">;</span>
-layer.hit.context.fillRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">50</span>)<span class="hljs-comment">;</span></code></pre>
+<pre><code class="javascript hljs"><span class="hljs-comment">// draw a rectangle on the hit canvas for interactivity</span>
+layer.hit.context.fillStyle = layer.hit.getColorFromIndex(<span class="hljs-number">0</span>);
+layer.hit.context.fillRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">50</span>);</code></pre>
+            </li>
+            <li>
+              <h3 id="layer-visible">.visible</h3>         
+<pre><code class="javascript hljs"><span class="hljs-comment">// hide layer</span>
+layer.visible=<span class="hljs-literal">false</span>;
+viewport.<span class="hljs-built_in">render</span>();
+
+<span class="hljs-comment">// show layer</span>
+layer.visible=<span class="hljs-literal">true</span>;
+viewport.<span class="hljs-built_in">render</span>();</code></pre>
             </li>
             <li>
               <h3 id="layer-setPosition">.setPosition()</h3>         
-<pre><code class="javascript"><span class="hljs-selector-tag">layer</span><span class="hljs-selector-class">.setPosition</span>(50, 50);</code></pre>
+<pre><code class="javascript hljs">layer.setPosition(<span class="hljs-number">50</span>, <span class="hljs-number">50</span>);</code></pre>
             </li>
             <li>
               <h3 id="layer-setSize">.setSize()</h3>         
-<pre><code class="javascript"><span class="hljs-selector-tag">layer</span><span class="hljs-selector-class">.setSize</span>(600, 200);</code></pre>
+<pre><code class="javascript hljs">layer.setSize(<span class="hljs-number">600</span>, <span class="hljs-number">200</span>);</code></pre>
             </li>
             <li>
               <h3 id="layer-moveUp">.moveUp()</h3>         
-<pre><code class="javascript"><span class="hljs-selector-tag">layer</span><span class="hljs-selector-class">.moveUp</span>();</code></pre>
+<pre><code class="javascript hljs">layer.moveUp()<span class="hljs-comment">;</span></code></pre>
             </li>
             <li>
               <h3 id="layer-moveDown">.moveDown()</h3>         
-<pre><code class="javascript"><span class="hljs-selector-tag">layer</span><span class="hljs-selector-class">.moveDown</span>();</code></pre>
+<pre><code class="javascript hljs">layer.moveDown()<span class="hljs-comment">;</span></code></pre>
             </li>
             <li>
               <h3 id="layer-moveToTop">.moveToTop()</h3>         
-<pre><code class="javascript"><span class="hljs-selector-tag">layer</span><span class="hljs-selector-class">.moveToTop</span>();</code></pre>
+<pre><code class="javascript hljs">layer.moveToTop()<span class="hljs-comment">;</span></code></pre>
             </li>
             <li>
               <h3 id="layer-moveToBottom">.moveToBottom()</h3>         
-<pre><code class="javascript"><span class="hljs-selector-tag">layer</span><span class="hljs-selector-class">.moveToBottom</span>();</code></pre>
+<pre><code class="javascript hljs">layer.moveToBottom()<span class="hljs-comment">;</span></code></pre>
             </li>
             <li>
               <h3 id="layer-getIndex">.getIndex()</h3>         
-<pre><code class="javascript"><span class="hljs-keyword">var</span> <span class="hljs-keyword">index</span> = layer.getIndex();</code></pre>
+<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> <span class="hljs-keyword">index</span> = layer.getIndex();</code></pre>
             </li>
             <li>
               <h3 id="layer-destroy">.destroy()</h3>         
-<pre><code class="javascript"><span class="hljs-comment">// goodbye forever</span>
+<pre><code class="javascript hljs"><span class="hljs-comment">// goodbye forever</span>
 layer.destroy<span class="hljs-comment">()</span>;</code></pre>
             </li>
           </ul>
@@ -248,35 +261,35 @@ layer.destroy<span class="hljs-comment">()</span>;</code></pre>
           <ul>
             <li>
               <h3 id="scene-constructor">constructor</h3>         
-<pre><code class="javascript"><span class="hljs-built_in">var</span> <span class="hljs-built_in">scene</span> = <span class="hljs-built_in">new</span> Concrete.Scene();</code></pre>
+<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> scene = <span class="hljs-keyword">new</span> <span class="hljs-type">Concrete</span>.Scene();</code></pre>
             </li>
             <li>
               <h3 id="scene-context">.context</h3>         
-<pre><code class="javascript">// <span class="hljs-built_in">get</span> canvas <span class="hljs-built_in">context</span>
+<pre><code class="javascript hljs">// <span class="hljs-built_in">get</span> canvas <span class="hljs-built_in">context</span>
 <span class="hljs-built_in">var</span> <span class="hljs-built_in">context</span> = <span class="hljs-built_in">scene</span>.<span class="hljs-built_in">context</span>;</code></pre>
             </li>
             <li>
               <h3 id="scene-canvas">.canvas</h3>         
-<pre><code class="javascript"><span class="hljs-comment">// get native canvas</span>
-<span class="hljs-variable"><span class="hljs-keyword">var</span> canvas</span> = scene.canvas;</code></pre>
+<pre><code class="javascript hljs">// <span class="hljs-built_in">get</span> canvas element
+<span class="hljs-built_in">var</span> canvas = <span class="hljs-built_in">scene</span>.canvas;</code></pre>
             </li>
             <li>
               <h3 id="scene-setSize">.setSize()</h3>         
-<pre><code class="javascript"><span class="hljs-keyword">scene.setSize(600, </span><span class="hljs-number">200</span>)<span class="hljs-comment">;</span></code></pre>
+<pre><code class="javascript hljs">scene.setSize(<span class="hljs-number">600</span>, <span class="hljs-number">200</span>);</code></pre>
             </li>
             <li>
               <h3 id="scene-clear">.clear()</h3>         
-<pre><code class="javascript">scene.<span class="hljs-built_in">clear</span>();</code></pre>
+<pre><code class="javascript hljs">scene.clear()<span class="hljs-comment">;</span></code></pre>
             </li>
             <li>
               <h3 id="scene-toImage">.toImage()</h3>         
-<pre><code class="javascript">scene.toImage(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(image)</span> </span>{
+<pre><code class="javascript hljs">scene.toImage(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(image)</span> </span>{
   <span class="hljs-comment">// do something with the image</span>
 });</code></pre>
             </li>
             <li>
               <h3 id="scene-download">.download()</h3>         
-<pre><code class="javascript"><span class="hljs-comment">// download the canvas as an image to your computer.  Cool!</span>
+<pre><code class="javascript hljs"><span class="hljs-comment">// download the canvas as an image to your computer.  Cool!</span>
 <span class="hljs-selector-tag">scene</span><span class="hljs-selector-class">.download</span>({
   <span class="hljs-attribute">fileName</span>: <span class="hljs-string">'my-file.png'</span>
 });</code></pre>
@@ -290,34 +303,34 @@ layer.destroy<span class="hljs-comment">()</span>;</code></pre>
           <ul>
             <li>
               <h3 id="hit-constructor">constructor</h3>         
-<pre><code class="javascript"><span class="hljs-keyword">var</span> hit = <span class="hljs-keyword">new</span> Concrete.Hit();</code></pre>
+<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> hit = <span class="hljs-keyword">new</span> <span class="hljs-type">Concrete</span>.Hit();</code></pre>
             </li>
             <li>
               <h3 id="hit-context">.context</h3>         
-<pre><code class="javascript">// <span class="hljs-built_in">get</span> canvas <span class="hljs-built_in">context</span>
+<pre><code class="javascript hljs">// <span class="hljs-built_in">get</span> canvas <span class="hljs-built_in">context</span>
 <span class="hljs-built_in">var</span> <span class="hljs-built_in">context</span> = hit.<span class="hljs-built_in">context</span>;</code></pre>
             </li>
             <li>
               <h3 id="hit-canvas">.canvas</h3>         
-<pre><code class="javascript"><span class="hljs-comment">// get native canvas</span>
-<span class="hljs-variable"><span class="hljs-keyword">var</span> canvas</span> = hit.canvas;</code></pre>
+<pre><code class="javascript hljs"><span class="hljs-comment">// get canvas element</span>
+var <span class="hljs-keyword">canvas</span> = hit.<span class="hljs-keyword">canvas</span>;</code></pre>
             </li>
             <li>
               <h3 id="hit-setSize">.setSize()</h3>         
-<pre><code class="javascript"><span class="hljs-selector-tag">hit</span><span class="hljs-selector-class">.setSize</span>(600, 200);</code></pre>
+<pre><code class="javascript hljs">hit.setSize(<span class="hljs-number">600</span>, <span class="hljs-number">200</span>);</code></pre>
             </li>
             <li>
               <h3 id="hit-clear">.clear()</h3>         
-<pre><code class="javascript">hit.<span class="hljs-built_in">clear</span>();</code></pre>
+<pre><code class="javascript hljs">hit.clear()<span class="hljs-comment">;</span></code></pre>
             </li>
             <li>
-              <h3 id="hit-getColorFromKey">.getColorFromKey()</h3>         
-<pre><code class="javascript">// <span class="hljs-built_in">get</span> hit <span class="hljs-built_in">color</span> from <span class="hljs-built_in">key</span>.  This enables mouse detection when using getIntersection()
-<span class="hljs-built_in">var</span> <span class="hljs-built_in">color</span> = hit.getColorFromKey('myKey');</code></pre>
+              <h3 id="hit-getColorFromIndex">.getColorFromIndex()</h3>         
+<pre><code class="javascript hljs">// <span class="hljs-built_in">get</span> hit <span class="hljs-built_in">color</span> from index.  This enables mouse detection when using getIntersection()
+<span class="hljs-built_in">var</span> <span class="hljs-built_in">color</span> = hit.getColorFromIndex(<span class="hljs-number">0</span>);</code></pre>
             </li>
             <li>
               <h3 id="hit-getIntersection">.getIntersection()</h3>         
-<pre><code class="javascript"><span class="hljs-variable"><span class="hljs-keyword">var</span> key</span> = hit.getIntersection(<span class="hljs-number">20</span>, <span class="hljs-number">30</span>);</code></pre>
+<pre><code class="javascript hljs"><span class="hljs-attribute">var dataIndex</span> = hit.getIntersection(20, 30);</code></pre>
             </li>
           </ul>
         </li>

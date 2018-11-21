@@ -66,7 +66,7 @@
         context.save();
         context.beginPath();
         context.arc(config.x, config.y, 60, 0, Math.PI*2, false);
-        context.fillStyle = hit.getColorFromKey(config.key);
+        context.fillStyle = hit.getColorFromIndex(config.key);
         context.fill();
         context.restore();
       }
@@ -143,7 +143,7 @@
           selected: true,
           layer: layer1,
           color: 'red',
-          key: 'red'
+          key: 0
         },
         {
           x: viewport.width*2/5,
@@ -152,7 +152,7 @@
           selected: false,
           layer: layer2,
           color: 'yellow',
-          key: 'yellow'
+          key: 1
         },
         {
           x: viewport.width*3/5,
@@ -161,14 +161,9 @@
           selected: false,
           layer: layer3,
           color: 'orange',
-          key: 'orange'
+          key: 2
         }
       ];
-
-      // register keys for mouse detection
-      layer1.hit.registerKey('red');
-      layer2.hit.registerKey('yellow');
-      layer3.hit.registerKey('orange');
 
       // draw circles onto hit canvases for mouse detection
       drawHitCircles();
@@ -189,7 +184,7 @@
           circle.hovered = false;
         });
         
-        if (key) {
+        if (key >= 0) {
           circle = getCircleFromKey(key);
           circle.hovered = true;
         }
@@ -209,7 +204,7 @@
           circle.selected = false;
         });
         
-        if (key) {
+        if (key >= 0) {
           circle = getCircleFromKey(key);
           circle.selected = true;
         }
