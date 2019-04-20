@@ -2,11 +2,11 @@
  * Concrete v3.0.2
  * A lightweight Html5 Canvas framework that enables hit detection, layering, multi buffering, 
  * pixel ratio management, exports, and image downloads
- * Release Date: 11-20-2018
+ * Release Date: 4-19-2019
  * https://github.com/ericdrowell/concrete
  * Licensed under the MIT or GPL Version 2 licenses.
  *
- * Copyright (C) 2018 Eric Rowell @ericdrowell
+ * Copyright (C) 2019 Eric Rowell @ericdrowell
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -502,9 +502,17 @@ Concrete.Hit.prototype = {
     var context = this.context,
         data;
 
+    x = Math.round(x);
+    y = Math.round(y);
+
+    // if x or y are out of bounds return -1
+    if (x < 0 || y < 0 || x > this.width || y > this.height) {
+      return -1;
+    }
+
     // 2d
     if (this.contextType === '2d') {
-      data = context.getImageData(Math.round(x), Math.round(y), 1, 1).data;
+      data = context.getImageData(x, y, 1, 1).data;
 
       if (data[3] === 0) {
         return -1;
@@ -513,7 +521,7 @@ Concrete.Hit.prototype = {
     // webgl
     else {
       data = new Uint8Array(4);
-      context.readPixels(Math.round(x*Concrete.PIXEL_RATIO), Math.round((this.height - y)*Concrete.PIXEL_RATIO), 1, 1, context.RGBA, context.UNSIGNED_BYTE, data);
+      context.readPixels(x*Concrete.PIXEL_RATIO, (this.height - y - 1)*Concrete.PIXEL_RATIO, 1, 1, context.RGBA, context.UNSIGNED_BYTE, data);
 
       if (data[0] === 255 && data[1] === 255 && data[2] === 255) {
         return -1;
