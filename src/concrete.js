@@ -64,6 +64,11 @@ Concrete.Viewport.prototype = {
     this.width = width;
     this.height = height;
     this.scene.setSize(width, height);
+
+    this.layers.forEach(function(layer) {
+      layer.setSize(width, height);
+    });
+    
     return this;
   },
   /**
