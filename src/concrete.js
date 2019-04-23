@@ -321,8 +321,6 @@ Concrete.Scene.prototype = {
   setSize: function(width, height) {
     this.width = width;
     this.height = height;
-
-    this.id = idCounter++;
     this.canvas.width = width * Concrete.PIXEL_RATIO;
     this.canvas.style.width = width + 'px';
     this.canvas.height = height * Concrete.PIXEL_RATIO;
