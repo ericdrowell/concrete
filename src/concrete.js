@@ -1,16 +1,9 @@
 var Concrete = {},
     idCounter = 0;
 
-Concrete.PIXEL_RATIO = (function(win) {
-  // client browsers
-  if (win && win.navigator && win.navigator.userAgent && !/PhantomJS/.test(win.navigator.userAgent)) {
-    return 2;
-  }
-  // headless browsers
-  else {
-    return 1;
-  }
-})(typeof window !== 'undefined' ? window : null);
+Concrete.PIXEL_RATIO = (function () {
+  return (window && window.devicePixelRatio) || 1;
+})();
 
 Concrete.viewports = [];
 
