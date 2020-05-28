@@ -85,6 +85,26 @@ Concrete.Viewport.prototype = {
 
     return -1;
   },
+  /**
+   * gets layer index associated to coordinate.  This can be used for mouse interactivity.
+   * @param {Number} x
+   * @param {Number} y
+   * @returns {Integer} integer value of layer - returns -1 if no pixel is there
+   */
+  getIntersectionLayer: function(x, y) {
+    var layers = this.layers,
+        len = layers.length,
+        n, layer, key;
+
+    for (n=len-1; n>=0; n--) {
+      layer = layers[n];
+      key = layer.hit.getIntersection(x, y);
+      if (key >= 0) {
+        return n;
+      }
+    }
+    return -1;
+  },
   /** 
    * get viewport index from all Concrete viewports
    * @returns {Integer}
