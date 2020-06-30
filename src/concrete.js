@@ -482,7 +482,7 @@ Concrete.Hit.prototype = {
     if (this.contextType === '2d') {
       data = context.getImageData(x, y, 1, 1).data;
 
-      if (data[3] === 0) {
+      if (data[3] < 255) {
         return -1;
       }      
     }
