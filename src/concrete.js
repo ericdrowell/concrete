@@ -339,7 +339,7 @@ Concrete.Scene.prototype = {
   clear: function() {
     var context = this.context;
     if (this.contextType === '2d') {
-      context.clearRect(0, 0, this.width * Concrete.PIXEL_RATIO, this.height * Concrete.PIXEL_RATIO);
+      context.clearRect(0, 0, this.width, this.height);
     }
     // webgl or webgl2
     else {
@@ -452,7 +452,7 @@ Concrete.Hit.prototype = {
   clear: function() {
     var context = this.context;
     if (this.contextType === '2d') {
-      context.clearRect(0, 0, this.width * Concrete.PIXEL_RATIO, this.height * Concrete.PIXEL_RATIO);
+      context.clearRect(0, 0, this.width, this.height);
     }
     // webgl or webgl2
     else {

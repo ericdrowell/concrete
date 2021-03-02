@@ -2,11 +2,11 @@
  * Concrete v3.0.6
  * A lightweight Html5 Canvas framework that enables hit detection, layering, multi buffering, 
  * pixel ratio management, exports, and image downloads
- * Release Date: 6-29-2020
+ * Release Date: 3-2-2021
  * https://github.com/ericdrowell/concrete
  * Licensed under the MIT or GPL Version 2 licenses.
  *
- * Copyright (C) 2020 Eric Rowell @ericdrowell
+ * Copyright (C) 2021 Eric Rowell @ericdrowell
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -367,7 +367,7 @@ Concrete.Scene.prototype = {
   clear: function() {
     var context = this.context;
     if (this.contextType === '2d') {
-      context.clearRect(0, 0, this.width * Concrete.PIXEL_RATIO, this.height * Concrete.PIXEL_RATIO);
+      context.clearRect(0, 0, this.width, this.height);
     }
     // webgl or webgl2
     else {
@@ -480,7 +480,7 @@ Concrete.Hit.prototype = {
   clear: function() {
     var context = this.context;
     if (this.contextType === '2d') {
-      context.clearRect(0, 0, this.width * Concrete.PIXEL_RATIO, this.height * Concrete.PIXEL_RATIO);
+      context.clearRect(0, 0, this.width, this.height);
     }
     // webgl or webgl2
     else {
