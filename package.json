@@ -1,6 +1,6 @@
 {
   "name": "concretejs",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "main": "build/concrete.min.js",
   "keywords": [
     "html5",

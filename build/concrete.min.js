@@ -1,8 +1,8 @@
 /*
- * Concrete v3.0.6
+ * Concrete v3.0.7
  * A lightweight Html5 Canvas framework that enables hit detection, layering, multi buffering, 
  * pixel ratio management, exports, and image downloads
- * Release Date: 3-2-2021
+ * Release Date: 3-3-2021
  * https://github.com/ericdrowell/concrete
  * Licensed under the MIT or GPL Version 2 licenses.
  *
