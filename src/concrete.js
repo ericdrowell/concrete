@@ -14,7 +14,11 @@ Concrete.viewports = [];
  * @param {Object} config
  * @param {Integer} config.width - viewport width in pixels
  * @param {Integer} config.height - viewport height in pixels
+ * @param {Boolean} config.cover - set enabled/disabled cover feature, default disabled
+ * @param {Number} config.coverCenterX - Number 0.0 through 1.0 defining the center point of the fit on the X axis
+ * @param {Number} config.coverCenterY - Number 0.0 through 1.0 defining the center point of the fit on the Y axis
  */
+
 Concrete.Viewport = function(config) {
   if (!config) {
     config = {};
