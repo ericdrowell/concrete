@@ -14,16 +14,26 @@ Concrete.viewports = [];
  * @param {Object} config
  * @param {Integer} config.width - viewport width in pixels
  * @param {Integer} config.height - viewport height in pixels
+ * @param {Boolean} config.cover - set enabled/disabled cover feature, default disabled
+ * @param {Number} config.coverCenterX - Number 0.0 through 1.0 defining the center point of the fit on the X axis
+ * @param {Number} config.coverCenterY - Number 0.0 through 1.0 defining the center point of the fit on the Y axis
  */
+
 Concrete.Viewport = function(config) {
   if (!config) {
     config = {};
   }
 
-  this.container = config.container;
-  this.layers = []; 
-  this.id = idCounter++;
-  this.scene = new Concrete.Scene();
+    this.container = config.container;
+    this.layers = [];
+    this.id = idCounter++;
+    this.scene = new Concrete.Scene();
+    this.cover = config.hasOwnProperty('cover') ? config.cover : false;
+    this.coverCenterX = config.hasOwnProperty('coverCenterX') ? config.coverCenterX : 0.5;
+    this.coverCenterY = config.hasOwnProperty('coverCenterY') ? config.coverCenterY : 0.5;
+    this.offsetX = 0;
+    this.offsetY = 0;
+    this.scale = 1;
 
   this.setSize(config.width || 0, config.height || 0);
   
@@ -32,7 +42,15 @@ Concrete.Viewport = function(config) {
   config.container.innerHTML = '';
   config.container.appendChild(this.scene.canvas);
 
-  Concrete.viewports.push(this);
+    Concrete.viewports.push(this);
+
+    // resize handler for cover fit
+    if (this.cover) {
+        this.coverFit();
+        this.scene.canvas.style.position = "absolute";
+        config.container.style.overflow = "hidden";
+        window.addEventListener('resize', ()=>{ this.coverFit() } );
+    }
 };
 
 Concrete.Viewport.prototype = {
@@ -58,22 +76,51 @@ Concrete.Viewport.prototype = {
     this.height = height;
     this.scene.setSize(width, height);
 
-    this.layers.forEach(function(layer) {
-      layer.setSize(width, height);
-    });
-    
-    return this;
-  },
-  /**
-   * get key associated to coordinate.  This can be used for mouse interactivity.
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Integer} integer - returns -1 if no pixel is there
-   */
-  getIntersection: function(x, y) {
-    var layers = this.layers,
-        len = layers.length,
-        n, layer, key;
+        this.layers.forEach(function(layer) {
+            layer.setSize(width, height);
+        });
+
+        return this;
+    },
+    coverFit: function(){
+        if ( this.cover ) {
+            let boundingRect = this.container.getBoundingClientRect();
+            let imgRat = this.width / this.height;
+            let divRat = boundingRect.width / boundingRect.height;
+
+            if (imgRat < divRat) {
+                this.container.firstChild.style.width = "100%";
+                this.container.firstChild.style.height = "auto";
+                this.scale = (boundingRect.width / this.width);
+                this.offsetX = 0;
+                this.offsetY = Math.floor((boundingRect.height - (this.height * this.scale)) * this.coverCenterY);
+                this.container.firstChild.style.left = "0";
+                this.container.firstChild.style.top = this.offsetY.toString() + "px";
+            } else {
+                this.container.firstChild.style.width = "auto";
+                this.container.firstChild.style.height = "100%";
+                this.scale = (boundingRect.height / this.height);
+                this.offsetY = 0;
+                this.offsetX = Math.floor((boundingRect.width - (this.width * this.scale)) * this.coverCenterX);
+                this.container.firstChild.style.top = "0";
+                this.container.firstChild.style.left = this.offsetX.toString() + "px";
+            }
+        }else{
+            this.container.firstChild.style.width = "100%";
+            this.container.firstChild.style.height = "auto";
+        }
+        //console.log("coverfit:",this.coverCenterX)
+    },
+    /**
+     * get key associated to coordinate.  This can be used for mouse interactivity.
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Integer} integer - returns -1 if no pixel is there
+     */
+    getIntersection: function(x, y) {
+        var layers = this.layers,
+            len = layers.length,
+            n, layer, key;
 
     for (n=len-1; n>=0; n--) {
       layer = layers[n];
@@ -83,6 +130,26 @@ Concrete.Viewport.prototype = {
       }
     }
 
+    return -1;
+  },
+  /**
+   * gets layer index associated to coordinate.  This can be used for mouse interactivity.
+   * @param {Number} x
+   * @param {Number} y
+   * @returns {Integer} integer value of layer - returns -1 if no pixel is there
+   */
+  getIntersectionLayer: function(x, y) {
+    var layers = this.layers,
+        len = layers.length,
+        n, layer, key;
+
+    for (n=len-1; n>=0; n--) {
+      layer = layers[n];
+      key = layer.hit.getIntersection(x, y);
+      if (key >= 0) {
+        return n;
+      }
+    }
     return -1;
   },
   /** 
@@ -126,6 +193,9 @@ Concrete.Viewport.prototype = {
     var scene = this.scene;
 
     scene.clear();
+    if ( this.cover ) {
+      this.coverFit();
+    }
 
     this.layers.forEach(function(layer) {
       if (layer.visible) {
